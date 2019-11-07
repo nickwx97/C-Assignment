@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\ChatbotProject",
+    "\\ChatbotProject\\ChatbotProject",
+    "\\ChatbotProject\\ChatbotProject\\Debug",
+    "\\ChatbotProject\\Debug"
   ],
-  "SelectedNode": "\\main.c",
+  "SelectedNode": "\\ChatbotProject\\Debug",
   "PreviewInSolutionExplorer": false
 }
