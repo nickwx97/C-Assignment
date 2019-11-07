@@ -52,7 +52,7 @@
  */
 const char *chatbot_botname() {
 
-	return "Chatbot";
+	return "Miss Magnolia";
 	
 }
 
