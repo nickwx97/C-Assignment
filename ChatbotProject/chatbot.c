@@ -63,8 +63,8 @@ const char *chatbot_botname() {
  * Returns: the name of the user as a null-terminated string
  */
 const char *chatbot_username() {
-
-	return "User";
+	
+	return userName;
 	
 }
 

@@ -29,10 +29,16 @@ int main(int argc, char *argv[]) {
 	int len;                    /* length of a word */
 	int done = 0;               /* set to 1 to end the main loop */
 	
+	
 	/* initialise the chatbot */
 	inv[0] = "reset";
 	inv[1] = NULL;
 	chatbot_do_reset(1, inv, output, MAX_RESPONSE);
+
+	/* Request for a username */
+	printf("%s: Hello, what's your name?\n", chatbot_botname());
+	fgets(userName, MAX_USERNAME, stdin);
+	userName[strlen(userName) - 1] = 0;
 	
 	/* print a welcome message */
 	printf("%s: Hello, I'm %s.\n", chatbot_botname(), chatbot_botname());
