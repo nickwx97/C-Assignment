@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 	userName[strlen(userName) - 1] = 0;
 	
 	/* print a welcome message */
-	printf("%s: Hello, I'm %s.\n", chatbot_botname(), chatbot_botname());
+	printf("%s: Hello %s, I'm %s.\n", chatbot_botname(),userName, chatbot_botname());
 	
 	/* main command loop */
 	do {
