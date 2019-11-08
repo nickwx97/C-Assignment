@@ -36,12 +36,54 @@ int main(int argc, char *argv[]) {
 	chatbot_do_reset(1, inv, output, MAX_RESPONSE);
 
 	/* Request for a username */
-	printf("%s: Hello, what's your name?\n", chatbot_botname());
+	printf("%s: Ey, who are you ah?\n", chatbot_botname());
 	fgets(userName, MAX_USERNAME, stdin);
 	userName[strlen(userName) - 1] = 0;
 	
-	/* print a welcome message */
-	printf("%s: Hello %s, I'm %s.\n", chatbot_botname(),userName, chatbot_botname());
+
+	if (strcmp(chatbot_botname(), userName) == 0) {
+		same_name_check = 1;
+	}
+
+
+	/*Loops to make sure the user chooses a different name as the chatbot*/
+	while (same_name_check == 1) {
+		printf("%s: Wa eh dun same name as me leh? Choose something else la.\n",chatbot_botname());
+		fgets(userName, MAX_USERNAME, stdin);
+		userName[strlen(userName) - 1] = 0;
+
+		if (strcmp(chatbot_botname(), userName) != 0) {
+			same_name_check = 0;
+		}
+		else {
+			pest_check++;
+		}
+
+		if (pest_check == 2) {
+			break;
+		}
+	}
+
+	
+
+
+	/*Calling user an irritating fool after purposely choosing the same name as the chatbot 3 times in a row*/
+	if (pest_check != 2) {
+		/* print a welcome message */
+
+		/*Checks if the user is an ICT professor. If so, chatbot attempts to por for grades*/
+		if (strcmp(userName, "Steven Wong") == 0) {
+			printf("Oh, you teach ICT1003 one right? That 'Fetch,Decode,Execute' guy? Heard you damn good sia. Haha, anyways, what's your question?\n");
+		}else if (strcmp(userName, "Frank Guan") == 0) {
+			printf("Oh, wow. Please give my creator an A+ for his 1002 please. He finds that you are the best SIT professor. May I know what you would like to ask me, sir?\n");
+		} else {
+		printf("%s: Hello %s, I'm %s.\n", chatbot_botname(), userName, chatbot_botname());
+		}
+	}
+	else {
+		printf("%s: Wa you want try be funny is it, irritating fool. I call you Irritating Fool sua. What you wan ask me la?\n", chatbot_botname());
+		strcpy(userName, "Irritating Fool");
+	}
 	
 	/* main command loop */
 	do {
