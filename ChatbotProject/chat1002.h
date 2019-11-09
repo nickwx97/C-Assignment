@@ -13,6 +13,9 @@
 /* the maximum number of characters we expect in a line of input (including the terminating null)  */
 #define MAX_INPUT    256
 
+/* the maximum number of characters for the username (including the terminating null)  */
+#define MAX_USERNAME 30
+
 /* the maximum number of characters allowed in the name of an intent (including the terminating null)  */
 #define MAX_INTENT   32
 
@@ -31,6 +34,10 @@
 /* functions defined in main.c */
 int compare_token(const char *token1, const char *token2);
 void prompt_user(char *buf, int n, const char *format, ...);
+char userName[MAX_USERNAME];/* to store the username typed in by the user*/
+int same_name_check;/* EASTER EGG to check if user inputs the same name as the chatbot*/
+int pest_check;/*EASTER EGG to check if user types same name with chatbot 3 times in a row*/
+
 
 /* functions defined in chatbot.c */
 const char *chatbot_botname();

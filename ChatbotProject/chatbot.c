@@ -52,7 +52,7 @@
  */
 const char *chatbot_botname() {
 
-	return "Chatbot";
+	return "Miss Magnolia";
 	
 }
 
@@ -63,8 +63,8 @@ const char *chatbot_botname() {
  * Returns: the name of the user as a null-terminated string
  */
 const char *chatbot_username() {
-
-	return "User";
+	
+	return userName;
 	
 }
 
@@ -307,11 +307,14 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_smalltalk(const char *intent) {
-	
+	//printf("%d", strcmp(intent,"good"));
 	/* to be implemented */
-	
-	return 0;
- 
+	if (strcmp(intent, "good") == 0 || strcmp(intent, "sorry") == 0|| strcmp(intent, "who") == 0 || strcmp(intent, "why") == 0) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
 }
 
 
@@ -326,7 +329,23 @@ int chatbot_is_smalltalk(const char *intent) {
  *   1, if the chatbot should stop chatting (e.g. the smalltalk was "goodbye" etc.)
  */
 int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
-	
+
+	if (strcmp(inv[1],"morning") == 0){
+	snprintf(response, n, "Who the fuck are you to disturb me in the morning?");
+	}
+	else if (strcmp(inv[0], "sorry") == 0) {
+	snprintf(response, n, "You better be sia i swear. Ask your question la sia.");
+	}
+	else if (strcmp(inv[1], "are") == 0 && strcmp(inv[2], "you") == 0) {
+		snprintf(response, n, "I am your queen, you peasant. The look of you disgust me sia i swear.");
+	}
+	else if (strcmp(inv[3], "mean") == 0) {
+		snprintf(response, n, "You got problem is it?");
+	}
+	else{
+		snprintf(response, n, "Da hell la sia");
+	}
+	//printf("%s",response);
 	/* to be implemented */
 	
 	return 0;
