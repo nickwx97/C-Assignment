@@ -54,8 +54,7 @@ int main(int argc, char *argv[]) {
 
 		if (strcmp(chatbot_botname(), userName) != 0) {
 			same_name_check = 0;
-		}
-		else {
+		} else {
 			pest_check++;
 		}
 

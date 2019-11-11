@@ -42,6 +42,7 @@
  
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "chat1002.h"
  
  
@@ -191,8 +192,11 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_question(const char *intent) {
-	
-	/* to be implemented */
+
+	if(strcmp(intent, "what")==0){
+		printf("\t\twhat here\n");
+		return 1;
+	}
 	
 	return 0;
 	

@@ -33,7 +33,7 @@
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
-	/* to be implemented */
+	printf("Testing\n");
 	
 	return KB_NOTFOUND;
 	
