@@ -1,2 +1,6 @@
-
-ChatbotProject/.vs/ChatbotProject/v16/Browse.VC.opendb
+*.opendb
+*.sln
+*.user
+*.vcxproj
+*.filters
+Debug/
