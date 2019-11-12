@@ -199,6 +199,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	}
 	knowledge_read(f);
 	fclose(f);
+	snprintf(response, n, "\"%s\" loaded.", inv[1]);
 	return 0;
 	 
 }

@@ -15,7 +15,22 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "chat1002.h"
+
+typedef struct header{
+	char* intent;
+	struct row* content;
+	struct header* next;
+}header;
+
+typedef struct row{
+	char* question;
+	char* answer;
+	struct row* next;
+}row;
+
+header *k_arr = NULL;
 
 /*
  * Get the response to a question.
@@ -74,12 +89,57 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
  */
 int knowledge_read(FILE *f) {
 	
+	header* cursor = k_arr;
 	while(!feof(f)){
 		char temp[MAX_INPUT];
 		fgets(temp, MAX_INPUT, f);
-		printf("%s\n", temp);
+		if(strlen(temp) == 1){
+			continue;
+		}
+		if (strchr(temp, '[')!=NULL && strchr(temp, ']')!=NULL){
+			header* new = (header*)malloc(sizeof(struct header));
+			if(k_arr == NULL){
+				new->intent = strdup(temp);
+				new->content = NULL;
+				new->next = NULL;
+				k_arr = new;
+				cursor = new;
+			}else{
+				new->intent = strdup(temp);
+				new->content = NULL;
+				new->next = k_arr;
+				k_arr = new;
+				cursor = new;
+			}
+		}else{
+			int alen = strlen(strchr(temp, '=')), qlen = strlen(temp)-alen;
+			char qn[qlen];
+			char ans[alen];
+			memset(qn, '\0', qlen);
+			memset(ans, '\0', alen);
+			int check = 1, q=0, a=0;
+			for (int i = 0; i < strlen(temp); ++i){
+				if(temp[i] == '='){
+					check = 0;
+					continue;
+				}
+				if (check){
+					qn[q++] = tolower(temp[i]);
+				}else{
+					ans[a++] = temp[i];
+				}
+			}
+			row* new = (row*)malloc(sizeof(struct row));
+			new->question = strdup(qn);
+			new->answer = strdup(ans);
+			if(cursor->content == NULL){
+				new->next = NULL;
+			}else{
+				new->next = cursor->content;
+			}
+			cursor->content = new;
+		}
 	}
-	
 	return 0;
 }
 
