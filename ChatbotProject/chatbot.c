@@ -190,11 +190,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_question(const char *intent) {
-	char c_intent[sizeof(intent)+1];
-	strcpy(c_intent, intent);
-	c_intent[sizeof(intent)+1] = '\0';
-	strToLwr(c_intent);
-	return (strcmp(c_intent, "what")==0 || strcmp(c_intent, "who")==0 || strcmp(c_intent, "where")==0) ? 1 : 0;
+	return compare_token(intent, "who") == 0 || compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0;
 }
 
 
