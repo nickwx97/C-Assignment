@@ -1,6 +1,6 @@
 *.opendb
-*.user
 *.sln
+*.user
 *.vcxproj
 *.filters
 Debug/
