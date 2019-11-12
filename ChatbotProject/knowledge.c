@@ -74,7 +74,11 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
  */
 int knowledge_read(FILE *f) {
 	
-	/* to be implemented */
+	while(!feof(f)){
+		char temp[MAX_INPUT];
+		fgets(temp, MAX_INPUT, f);
+		printf("%s\n", temp);
+	}
 	
 	return 0;
 }

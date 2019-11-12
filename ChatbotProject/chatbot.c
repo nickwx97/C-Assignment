@@ -171,9 +171,34 @@ int chatbot_is_load(const char *intent) {
  *   0 (the chatbot always continues chatting after loading knowledge)
  */
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
-	 
+
+	int len = 0;
+	FILE *f;
+	if (inc > 2){
+		for (int i = 1; i < inc; ++i){
+			len += strlen(inv[i]);
+		}
+		char fp[len];
+		memset(fp, '\0', len);
+		strcat(fp, inv[1]);
+		for (int i = 2; i < inc; ++i){
+			strcat(fp, " ");
+			strcat(fp, inv[i]);
+		}
+		f = fopen(fp, "r");
+		if(f == NULL){
+			snprintf(response, n, "Unable to load file: \"%s\".", fp);
+			return 0;
+		}
+	}else{
+		f = fopen(inv[1], "r");
+		if(f == NULL){
+			snprintf(response, n, "Unable to load file: \"%s\".", inv[1]);
+			return 0;
+		}
+	}
+	knowledge_read(f);
+	fclose(f);
 	return 0;
 	 
 }
