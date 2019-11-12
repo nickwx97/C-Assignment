@@ -156,9 +156,7 @@ int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_load(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
+	return compare_token(intent, "load") == 0;
 	
 }
 
