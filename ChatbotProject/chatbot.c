@@ -192,14 +192,11 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_question(const char *intent) {
-
-	if(strcmp(intent, "what")==0){
-		printf("\t\twhat here\n");
-		return 1;
-	}
-	
-	return 0;
-	
+	char c_intent[sizeof(intent)+1];
+	strcpy(c_intent, intent);
+	c_intent[sizeof(intent)+1] = '\0';
+	strToLwr(c_intent);
+	return (strcmp(c_intent, "what")==0 || strcmp(c_intent, "who")==0 || strcmp(c_intent, "where")==0) ? 1 : 0;
 }
 
 
