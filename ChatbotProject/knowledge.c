@@ -48,9 +48,24 @@ header *k_arr = NULL;
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
-	printf("Testing\n");
+	header *cursor = k_arr;
+
+	while(cursor != NULL){
+		if(compare_token(cursor->intent, intent) == 0){
+			row *incursor = cursor->content;
+			while(incursor != NULL){
+				if(compare_token(incursor->question, entity) == 0){
+					snprintf(response, n, incursor->answer);
+					return KB_OK;
+				}
+				incursor = incursor->next;
+			}
+			return KB_NOTFOUND;
+		}
+		cursor = cursor->next;
+	}
 	
-	return KB_NOTFOUND;
+	return KB_INVALID;
 	
 }
 
@@ -97,6 +112,11 @@ int knowledge_read(FILE *f) {
 			continue;
 		}
 		if (strchr(temp, '[')!=NULL && strchr(temp, ']')!=NULL){
+			int len=strlen(temp);
+			for(int i=1;i<len-1;i++){
+				temp[i-1]=temp[i];
+			}
+			temp[len-3]='\0';
 			header* new = (header*)malloc(sizeof(struct header));
 			if(k_arr == NULL){
 				new->intent = strdup(temp);

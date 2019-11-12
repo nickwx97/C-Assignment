@@ -234,8 +234,23 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
+	int len = 0;
+	int num = 1;
+	if(compare_token(inv[1], "is") == 0 || compare_token(inv[1], "are") == 0){
+		num = 2;
+	}
+
+	for (int i = num; i < inc; ++i){
+		len+=strlen(inv[i]);
+	}
+	char entity[len];
+	memset(entity, '\0', len);
+	strcat(entity, inv[num]);
+	for (int i = num+1; i < inc; ++i){
+		strcat(entity, " ");
+		strcat(entity, inv[i]);
+	}
+	knowledge_get(inv[0], entity, response, n);
 	 
 	return 0;
 	 
@@ -328,7 +343,7 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 int chatbot_is_smalltalk(const char *intent) {
 	//printf("%d", strcmp(intent,"good"));
 	/* to be implemented */
-	if (strcmp(intent, "good") == 0 || strcmp(intent, "sorry") == 0|| strcmp(intent, "who") == 0 || strcmp(intent, "why") == 0) {
+	if (strcmp(intent, "good") == 0 || strcmp(intent, "sorry") == 0|| strcmp(intent, "why") == 0) {
 		return 1;
 	}
 	else {
