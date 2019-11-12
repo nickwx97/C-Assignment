@@ -260,14 +260,12 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
  *  intent - the intent
  *
  * Returns:
- *  1, if the intent is "what", "where", or "who"
+ *  1, if the intent is "save"
  *  0, otherwise
  */
 int chatbot_is_save(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
+	return compare_token(intent, "save") == 0;
 	
 }
 
