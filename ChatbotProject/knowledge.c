@@ -103,7 +103,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 			new->answer = strdup(response);
 			new->next = cursor->content;
 			cursor->content = new;
-			return KB_FOUND;
+			return KB_OK;
 		}
 		cursor = cursor->next;
 	}
@@ -135,7 +135,8 @@ int knowledge_read(FILE *f) {
 				temp[i-1]=temp[i];
 			}
 			temp[len-3]='\0';
-			header* new = (header*)malloc(sizeof(struct header));
+			printf("%s\n", temp);
+			header* new = (header*)calloc(1,sizeof(struct header));
 			if(k_arr == NULL){
 				new->intent = strdup(temp);
 				new->content = NULL;
@@ -150,11 +151,11 @@ int knowledge_read(FILE *f) {
 				cursor = new;
 			}
 		}else{
-			int alen = strlen(strchr(temp, '=')), qlen = strlen(temp)-alen;
+			int alen = strlen(strchr(temp, '='))-1, qlen = strlen(temp)-alen+1;
 			char qn[qlen];
 			char ans[alen];
-			memset(qn, '\0', qlen);
-			memset(ans, '\0', alen);
+			qn[qlen] = '\0';
+			ans[alen] = '\0';
 			int check = 1, q=0, a=0;
 			for (int i = 0; i < strlen(temp); ++i){
 				if(temp[i] == '='){
@@ -167,7 +168,7 @@ int knowledge_read(FILE *f) {
 					ans[a++] = temp[i];
 				}
 			}
-			row* new = (row*)malloc(sizeof(struct row));
+			row* new = (row*)calloc(1, sizeof(struct row));
 			new->question = strdup(qn);
 			new->answer = strdup(ans);
 			if(cursor->content == NULL){
@@ -175,6 +176,7 @@ int knowledge_read(FILE *f) {
 			}else{
 				new->next = cursor->content;
 			}
+			printf("%s=%s\n", qn, ans);
 			cursor->content = new;
 		}
 	}
