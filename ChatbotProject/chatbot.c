@@ -250,7 +250,20 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		strcat(entity, " ");
 		strcat(entity, inv[i]);
 	}
-	knowledge_get(inv[0], entity, response, n);
+	if(knowledge_get(inv[0], entity, response, n) == KB_NOTFOUND){
+		if (num == 1) printf("%s: Sorry, I do not know. %s %s?\n", chatbot_botname(), inv[0], inv[1], entity);
+		else printf("%s: Sorry, I do not know. %s %s %s?\n", chatbot_botname(), inv[0], inv[1], entity);
+		printf("%s: ", chatbot_username());
+		char input[MAX_INPUT];
+		fgets(input, MAX_INPUT, stdin);
+
+		if(strlen(input) == 1){
+			snprintf(response, n , ":-(");
+		}else{
+			knowledge_put(inv[0], entity, input);
+			snprintf(response, n , "Thank you.");
+		}
+	}
 	 
 	return 0;
 	 

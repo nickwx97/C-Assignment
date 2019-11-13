@@ -87,10 +87,28 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
 	
-	/* to be implemented */
+	header *cursor = k_arr;
+	char qn[strlen(entity)];
+	memset(qn, '\0', strlen(entity));
+	for (int i = 0; i < strlen(entity); ++i)
+	{
+		qn[i] = tolower(entity[i]);
+	}
+	qn[strlen(entity)] = '\0';
+
+	while(cursor != NULL){
+		if(compare_token(cursor->intent, intent) == 0){
+			row* new = (row*)malloc(sizeof(struct row));
+			new->question = strdup(qn);
+			new->answer = strdup(response);
+			new->next = cursor->content;
+			cursor->content = new;
+			return KB_FOUND;
+		}
+		cursor = cursor->next;
+	}
 	
 	return KB_INVALID;
-	
 }
 
 
