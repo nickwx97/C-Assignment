@@ -15,7 +15,22 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "chat1002.h"
+
+typedef struct header{
+	char* intent;
+	struct row* content;
+	struct header* next;
+}header;
+
+typedef struct row{
+	char* question;
+	char* answer;
+	struct row* next;
+}row;
+
+header *k_arr = NULL;
 
 /*
  * Get the response to a question.
@@ -33,9 +48,24 @@
  */
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
-	/* to be implemented */
+	header *cursor = k_arr;
+
+	while(cursor != NULL){
+		if(compare_token(cursor->intent, intent) == 0){
+			row *incursor = cursor->content;
+			while(incursor != NULL){
+				if(compare_token(incursor->question, entity) == 0){
+					snprintf(response, n, incursor->answer);
+					return KB_OK;
+				}
+				incursor = incursor->next;
+			}
+			return KB_NOTFOUND;
+		}
+		cursor = cursor->next;
+	}
 	
-	return KB_NOTFOUND;
+	return KB_INVALID;
 	
 }
 
@@ -57,10 +87,28 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
 	
-	/* to be implemented */
+	header *cursor = k_arr;
+	char qn[strlen(entity)];
+	memset(qn, '\0', strlen(entity));
+	for (int i = 0; i < strlen(entity); ++i)
+	{
+		qn[i] = tolower(entity[i]);
+	}
+	qn[strlen(entity)] = '\0';
+
+	while(cursor != NULL){
+		if(compare_token(cursor->intent, intent) == 0){
+			row* new = (row*)malloc(sizeof(struct row));
+			new->question = strdup(qn);
+			new->answer = strdup(response);
+			new->next = cursor->content;
+			cursor->content = new;
+			return KB_OK;
+		}
+		cursor = cursor->next;
+	}
 	
 	return KB_INVALID;
-	
 }
 
 
@@ -74,8 +122,64 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
  */
 int knowledge_read(FILE *f) {
 	
-	/* to be implemented */
-	
+	header* cursor = k_arr;
+	while(!feof(f)){
+		char temp[MAX_INPUT];
+		fgets(temp, MAX_INPUT, f);
+		if(strlen(temp) == 1){
+			continue;
+		}
+		if (strchr(temp, '[')!=NULL && strchr(temp, ']')!=NULL){
+			int len=strlen(temp);
+			for(int i=1;i<len-1;i++){
+				temp[i-1]=temp[i];
+			}
+			temp[len-3]='\0';
+			printf("%s\n", temp);
+			header* new = (header*)calloc(1,sizeof(struct header));
+			if(k_arr == NULL){
+				new->intent = strdup(temp);
+				new->content = NULL;
+				new->next = NULL;
+				k_arr = new;
+				cursor = new;
+			}else{
+				new->intent = strdup(temp);
+				new->content = NULL;
+				new->next = k_arr;
+				k_arr = new;
+				cursor = new;
+			}
+		}else{
+			int alen = strlen(strchr(temp, '='))-1, qlen = strlen(temp)-alen+1;
+			char qn[qlen];
+			char ans[alen];
+			qn[qlen] = '\0';
+			ans[alen] = '\0';
+			int check = 1, q=0, a=0;
+			for (int i = 0; i < strlen(temp); ++i){
+				if(temp[i] == '='){
+					check = 0;
+					continue;
+				}
+				if (check){
+					qn[q++] = tolower(temp[i]);
+				}else{
+					ans[a++] = temp[i];
+				}
+			}
+			row* new = (row*)calloc(1, sizeof(struct row));
+			new->question = strdup(qn);
+			new->answer = strdup(ans);
+			if(cursor->content == NULL){
+				new->next = NULL;
+			}else{
+				new->next = cursor->content;
+			}
+			printf("%s=%s\n", qn, ans);
+			cursor->content = new;
+		}
+	}
 	return 0;
 }
 
