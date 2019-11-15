@@ -251,7 +251,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		strcat(entity, inv[i]);
 	}
 	if(knowledge_get(inv[0], entity, response, n) == KB_NOTFOUND){
-		if (num == 1) printf("%s: Sorry, I do not know. %s %s?\n", chatbot_botname(), inv[0], inv[1], entity);
+		if (num == 1) printf("%s: Sorry, I do not know. %s %s?\n", chatbot_botname(), inv[0], entity);
 		else printf("%s: Sorry, I do not know. %s %s %s?\n", chatbot_botname(), inv[0], inv[1], entity);
 		printf("%s: ", chatbot_username());
 		char input[MAX_INPUT];
