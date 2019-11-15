@@ -97,6 +97,8 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
 		return chatbot_do_question(inc, inv, response, n);
+	else if (chatbot_is_help(inv[0]))
+		return chatbot_do_help(inc, inv, response, n);
 	else if (chatbot_is_reset(inv[0]))
 		return chatbot_do_reset(inc, inv, response, n);
 	else if (chatbot_is_save(inv[0]))
@@ -138,9 +140,38 @@ int chatbot_is_exit(const char *intent) {
 int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
 	 
 	snprintf(response, n, "Goodbye!");
-	 
+	
 	return 1;
 	 
+}
+
+
+/*
+ * Determine whether an intent is HELP.
+ *
+ * Input:
+ *  intent - the intent
+ *
+ * Returns:
+ *  1, if the intent is "help"
+ *  0, otherwise
+ */
+int chatbot_is_help(const char* intent) {
+
+	return compare_token(intent, "help") == 0;
+
+}
+
+/*
+ * Perform the HELP intent.
+ *
+ * Returns:
+ *   0 (the chatbot always continues chatting after a question)
+ */
+int chatbot_do_help(int inc, char* inv[], char* response, int n) {
+	snprintf(response, n, "\n<------List of commands:------> \n load 'sample.ini' - load the knowledge base\n save - save knowledge base\n reset - reset knowledge base.\n quit/exit - exit the chatbot.\n");
+	
+	return 0;
 }
 
 
