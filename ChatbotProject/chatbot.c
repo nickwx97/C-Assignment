@@ -97,6 +97,8 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
 		return chatbot_do_question(inc, inv, response, n);
+	else if (chatbot_is_game(inv[0]))
+		return chatbot_do_game(inc, inv, response, n);
 	else if (chatbot_is_help(inv[0]))
 		return chatbot_do_help(inc, inv, response, n);
 	else if (chatbot_is_reset(inv[0]))
@@ -309,7 +311,6 @@ int chatbot_is_game(const char* intent) {
 }
 
 int chatbot_do_game(int inc, char* inv[], char* response, int n) {
-	//snprintf(response, n, "test");
 	char* guessword;
 	char* display;
 	char* output;
@@ -389,7 +390,7 @@ int chatbot_do_game(int inc, char* inv[], char* response, int n) {
 //	}
 //}
 	output = ("Player 2 has so far guessed : \n", display);
-	snprintf(response, n, output);
+	snprintf(response, n, "The word has %d characters!: %s.",noofcharacters,display);
 	return 0;
 }
 
