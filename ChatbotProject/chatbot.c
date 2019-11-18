@@ -97,13 +97,8 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
 		return chatbot_do_question(inc, inv, response, n);
-<<<<<<< HEAD
-	else if (chatbot_is_game(inv[0]))
-		return chatbot_do_game(inc, inv, response, n);
-=======
 	else if (chatbot_is_help(inv[0]))
 		return chatbot_do_help(inc, inv, response, n);
->>>>>>> cc679e93390cc60bdd982691502f16bd643a660c
 	else if (chatbot_is_reset(inv[0]))
 		return chatbot_do_reset(inc, inv, response, n);
 	else if (chatbot_is_save(inv[0]))
@@ -483,8 +478,8 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_smalltalk(const char *intent) {
-	if (compare_token(intent, "good") == 0 || compare_token(intent, "hello") == 0 || compare_token(intent, "goodbye") == 0 || compare_token(intent, "it's") == 0
-		|| compare_token(intent, "today") == 0 || compare_token(intent, "i") == 0) {
+	if (compare_token(intent, "good") == 0 || compare_token(intent, "hello") == 0 || compare_token(intent,"goodbye") == 0 || compare_token(intent, "it's") == 0
+	|| compare_token(intent, "today") == 0 || compare_token(intent, "i") == 0) {
 		return 1;
 	}
 	else {
@@ -509,26 +504,25 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
 		if (compare_token(inv[i], "morning") == 0) {
 			snprintf(response, n, "%s", "Good morning.");
 		}
-		else if (compare_token(inv[i], "afternoon") == 0) {
+		else if (compare_token(inv[i], "afternoon") == 0){
 			snprintf(response, n, "%s", "Good afternoon.");
 		}
-		else if (compare_token(inv[i], "evening") == 0) {
+		else if (compare_token(inv[i], "evening") == 0){
 			snprintf(response, n, "%s", "Good evening.");
 		}
 		else if (compare_token(inv[i], "goodbye") == 0) {
 			//chatbot_do_exit(inc, inv, response, n); //this function returns 1 and exits the program
 			return 1;
-		}
-		else if (compare_token(inv[i], "hello") == 0) {
+		}else if (compare_token(inv[i], "hello") == 0){
 			snprintf(response, n, "%s", "Hello.");
 		}
-		else if (compare_token(inv[i], "it's") == 0) {
+		else if (compare_token(inv[i], "it's") == 0){
 			snprintf(response, n, "%s", "Indeed it is.");
 		}
-		else if (compare_token(inv[i], "today") == 0) {
+		else if (compare_token(inv[i], "today") == 0){
 			snprintf(response, n, "%s", "That's good to know.");
 		}
-		else if (compare_token(inv[i], "i") == 0) {
+		else if (compare_token(inv[i], "i") == 0){
 			snprintf(response, n, "%s", "I see.");
 		}
 	}
