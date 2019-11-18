@@ -406,10 +406,12 @@ int chatbot_do_game(int inc, char* inv[], char* response, int n) {
  */
 int chatbot_is_reset(const char *intent) {
 	
-	/* to be implemented */
-	
+	if (compare_token(intent, "reset") == 0) {
+		return 1;
+	}
+	else{
 	return 0;
-	
+	}
 }
 
 
@@ -425,7 +427,8 @@ int chatbot_is_reset(const char *intent) {
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
+	knowledge_reset();
+	snprintf(response, n, "%s", "Chatbot Reset");
 	 
 	return 0;
 	 

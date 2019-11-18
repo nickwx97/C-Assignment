@@ -31,6 +31,7 @@ typedef struct row{
 }row;
 
 header *k_arr = NULL;
+header* test = NULL;
 
 /*
  * Get the response to a question.
@@ -49,7 +50,7 @@ header *k_arr = NULL;
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
 	header *cursor = k_arr;
-
+	k_arr = test;
 	while(cursor != NULL){
 		if(compare_token(cursor->intent, intent) == 0){
 			row *incursor = cursor->content;
@@ -190,6 +191,10 @@ int knowledge_read(FILE *f) {
 void knowledge_reset() {
 	
 	/* to be implemented */
+	free(test);
+		
+	
+	
 	
 }
 
