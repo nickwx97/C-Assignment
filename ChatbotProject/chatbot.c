@@ -97,6 +97,13 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
 		return chatbot_do_question(inc, inv, response, n);
+<<<<<<< HEAD
+	else if (chatbot_is_game(inv[0]))
+		return chatbot_do_game(inc, inv, response, n);
+=======
+	else if (chatbot_is_help(inv[0]))
+		return chatbot_do_help(inc, inv, response, n);
+>>>>>>> cc679e93390cc60bdd982691502f16bd643a660c
 	else if (chatbot_is_reset(inv[0]))
 		return chatbot_do_reset(inc, inv, response, n);
 	else if (chatbot_is_save(inv[0]))
@@ -138,9 +145,38 @@ int chatbot_is_exit(const char *intent) {
 int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
 	 
 	snprintf(response, n, "Goodbye!");
-	 
+	
 	return 1;
 	 
+}
+
+
+/*
+ * Determine whether an intent is HELP.
+ *
+ * Input:
+ *  intent - the intent
+ *
+ * Returns:
+ *  1, if the intent is "help"
+ *  0, otherwise
+ */
+int chatbot_is_help(const char* intent) {
+
+	return compare_token(intent, "help") == 0;
+
+}
+
+/*
+ * Perform the HELP intent.
+ *
+ * Returns:
+ *   0 (the chatbot always continues chatting after a question)
+ */
+int chatbot_do_help(int inc, char* inv[], char* response, int n) {
+	snprintf(response, n, "\n<------List of commands:------> \n load 'sample.ini' - load the knowledge base\n save - save knowledge base\n reset - reset knowledge base.\n quit/exit - exit the chatbot.\n");
+	
+	return 0;
 }
 
 
@@ -251,11 +287,13 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		strcat(entity, inv[i]);
 	}
 	if(knowledge_get(inv[0], entity, response, n) == KB_NOTFOUND){
-		if (num == 1) printf("%s: Sorry, I do not know. %s %s?\n", chatbot_botname(), inv[0], inv[1], entity);
+		if (num == 1) printf("%s: Sorry, I do not know. %s %s?\n", chatbot_botname(), inv[0], entity);
 		else printf("%s: Sorry, I do not know. %s %s %s?\n", chatbot_botname(), inv[0], inv[1], entity);
 		printf("%s: ", chatbot_username());
 		char input[MAX_INPUT];
 		fgets(input, MAX_INPUT, stdin);
+
+
 
 		if(strlen(input) == 1){
 			snprintf(response, n , ":-(");
@@ -268,7 +306,97 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	return 0;
 	 
 }
+int chatbot_is_game(const char* intent) {
 
+	return compare_token(intent, "play") == 0;
+	
+
+}
+
+int chatbot_do_game(int inc, char* inv[], char* response, int n) {
+	//snprintf(response, n, "test");
+	char* guessword;
+	char* display;
+	char* output;
+	int roll,p;
+	roll = (rand() % 3);
+		
+	switch (roll) {
+	case 1: 
+		guessword = "Computer";
+		break;
+	case 2: 
+		guessword = "Architecture";
+		break;
+	default: 
+		guessword = "None";
+	}
+	strtok(display, "\n");
+	
+	const int noofcharacters = strlen(guessword);
+	
+	for (int i = 0; i < noofcharacters; i++)
+	{
+		display[i] = '_';
+		
+	}
+
+		
+//	do
+//	{
+//		p = 0;
+//
+//		printf("Player 2 has so far guessed: %s\n", display);
+//		printf("Player 2, you have %d guesses remaining. Enter your your next guess:\n", guesses);//getting input from users
+//		fgets(guess_input, MAX_INPUT_CHAR, stdin);
+//
+//		
+//		strtok(guess_input, "\n");
+//		
+//		for (int i = 0; i < (strlen(guess_input)); i++)
+//		{
+//			guess_input[i] = tolower(guess_input[i]);
+//
+//
+//			if (checkpunct(guess_input[i]) == 1)
+//			{
+//				p++;
+//			}
+//		}
+//
+//		
+//		if (p == 0)
+//		{
+//			for (int i = 0; i < strlen(user_input); i++)
+//			{
+//				if (user_input[i] == guess_input[0])
+//				{
+//					display[i] = guess_input[0];
+//				}
+//			}
+//
+//			guesses--;
+//		}
+//
+//		if (strcmp(user_input, display) == 0)
+//		{
+//			break;
+//		}
+//	} while (guesses > 0);
+//
+//	if (strcmp(user_input, display) == 0)
+//	{
+//		printf("Player 2 wins.\n");
+//	}
+//	else
+//	{
+//		printf("Player 1 wins.\n");
+//	}
+//}
+	output = ("Player 2 has so far guessed : \n", display);
+	snprintf(response, n, output);
+	return 0;
+}
 
 /*
  * Determine whether an intent is RESET.
@@ -287,6 +415,7 @@ int chatbot_is_reset(const char *intent) {
 	return 0;
 	
 }
+
 
 
 /*
@@ -354,9 +483,8 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_smalltalk(const char *intent) {
-	//printf("%d", strcmp(intent,"good"));
-	/* to be implemented */
-	if (strcmp(intent, "good") == 0 || strcmp(intent, "sorry") == 0|| strcmp(intent, "why") == 0) {
+	if (compare_token(intent, "good") == 0 || compare_token(intent, "hello") == 0 || compare_token(intent, "goodbye") == 0 || compare_token(intent, "it's") == 0
+		|| compare_token(intent, "today") == 0 || compare_token(intent, "i") == 0) {
 		return 1;
 	}
 	else {
@@ -376,24 +504,35 @@ int chatbot_is_smalltalk(const char *intent) {
  *   1, if the chatbot should stop chatting (e.g. the smalltalk was "goodbye" etc.)
  */
 int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
+	for (int i = 0; i < inc; i++) {
+		//printf("%s\n", inv[i]);
+		if (compare_token(inv[i], "morning") == 0) {
+			snprintf(response, n, "%s", "Good morning.");
+		}
+		else if (compare_token(inv[i], "afternoon") == 0) {
+			snprintf(response, n, "%s", "Good afternoon.");
+		}
+		else if (compare_token(inv[i], "evening") == 0) {
+			snprintf(response, n, "%s", "Good evening.");
+		}
+		else if (compare_token(inv[i], "goodbye") == 0) {
+			//chatbot_do_exit(inc, inv, response, n); //this function returns 1 and exits the program
+			return 1;
+		}
+		else if (compare_token(inv[i], "hello") == 0) {
+			snprintf(response, n, "%s", "Hello.");
+		}
+		else if (compare_token(inv[i], "it's") == 0) {
+			snprintf(response, n, "%s", "Indeed it is.");
+		}
+		else if (compare_token(inv[i], "today") == 0) {
+			snprintf(response, n, "%s", "That's good to know.");
+		}
+		else if (compare_token(inv[i], "i") == 0) {
+			snprintf(response, n, "%s", "I see.");
+		}
+	}
 
-	if (strcmp(inv[1],"morning") == 0){
-	snprintf(response, n, "Who the fuck are you to disturb me in the morning?");
-	}
-	else if (strcmp(inv[0], "sorry") == 0) {
-	snprintf(response, n, "You better be sia i swear. Ask your question la sia.");
-	}
-	else if (strcmp(inv[1], "are") == 0 && strcmp(inv[2], "you") == 0) {
-		snprintf(response, n, "I am your queen, you peasant. The look of you disgust me sia i swear.");
-	}
-	else if (strcmp(inv[3], "mean") == 0) {
-		snprintf(response, n, "You got problem is it?");
-	}
-	else{
-		snprintf(response, n, "Da hell la sia");
-	}
-	//printf("%s",response);
-	/* to be implemented */
 	
 	return 0;
 	
