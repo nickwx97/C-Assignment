@@ -191,7 +191,11 @@ int knowledge_read(FILE *f) {
 void knowledge_reset() {
 	
 	/* to be implemented */
-	free(test);
+	while (test != NULL) {
+		free(test);
+		test = test->next;
+	}
+	
 		
 	
 	
