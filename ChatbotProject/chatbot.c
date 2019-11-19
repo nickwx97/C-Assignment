@@ -97,8 +97,9 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
 		return chatbot_do_question(inc, inv, response, n);
-	else if (chatbot_is_game(inv[0]))
+	else if (chatbot_is_game(inv[0])) {
 		return chatbot_do_game(inc, inv, response, n);
+	}
 	else if (chatbot_is_help(inv[0]))
 		return chatbot_do_help(inc, inv, response, n);
 	else if (chatbot_is_reset(inv[0]))
@@ -314,8 +315,8 @@ int chatbot_do_game(int inc, char* inv[], char* response, int n) {
 	char* guessword;
 	char* display;
 	char* output;
-	int roll,p;
-	roll = (rand() % 3);
+	int roll, p;
+	roll = (rand() % 5);
 		
 	switch (roll) {
 	case 1: 
@@ -324,73 +325,57 @@ int chatbot_do_game(int inc, char* inv[], char* response, int n) {
 	case 2: 
 		guessword = "Architecture";
 		break;
+	case 3:
+		guessword = "Organisation";
+		break;
+	case 4:
+		guessword = "Development";
+		break;
 	default: 
-		guessword = "None";
+		guessword = "ICT";
 	}
 	strtok(display, "\n");
 	
 	const int noofcharacters = strlen(guessword);
+
+	int guesses = 10;
 	
 	for (int i = 0; i < noofcharacters; i++)
 	{
 		display[i] = '_';
 		
 	}
-
+	snprintf(response, n, "You have %d guesses! : %s ", guesses, display);
 		
-//	do
-//	{
-//		p = 0;
-//
-//		printf("Player 2 has so far guessed: %s\n", display);
-//		printf("Player 2, you have %d guesses remaining. Enter your your next guess:\n", guesses);//getting input from users
-//		fgets(guess_input, MAX_INPUT_CHAR, stdin);
-//
-//		
-//		strtok(guess_input, "\n");
-//		
-//		for (int i = 0; i < (strlen(guess_input)); i++)
-//		{
-//			guess_input[i] = tolower(guess_input[i]);
-//
-//
-//			if (checkpunct(guess_input[i]) == 1)
-//			{
-//				p++;
-//			}
-//		}
-//
-//		
-//		if (p == 0)
-//		{
-//			for (int i = 0; i < strlen(user_input); i++)
-//			{
-//				if (user_input[i] == guess_input[0])
-//				{
-//					display[i] = guess_input[0];
-//				}
-//			}
-//
-//			guesses--;
-//		}
-//
-//		if (strcmp(user_input, display) == 0)
-//		{
-//			break;
-//		}
-//	} while (guesses > 0);
-//
-//	if (strcmp(user_input, display) == 0)
-//	{
-//		printf("Player 2 wins.\n");
-//	}
-//	else
-//	{
-//		printf("Player 1 wins.\n");
-//	}
-//}
-	output = ("Player 2 has so far guessed : \n", display);
-	snprintf(response, n, "The word has %d characters!: %s.",noofcharacters,display);
+	//do
+	/*{
+
+		snprintf(response, n, "You have %d guesses! : %s ", guesses, display);
+		
+		for (int i = 0; i < strlen(guessword); i++)
+		{
+			if (guessword[i] == inv[0])
+			{
+				display[i] = inv[0];
+			}
+		}
+
+			guesses--;
+
+		if (strcmp(inv[0], display) == 0)
+		{
+			break;
+		}
+
+
+	} while (guesses > 0);
+
+	if (strcmp(guessword, display) == 0)
+	{
+		printf("You Win!\n");
+	}*/
+	
+	
 	return 0;
 }
 
