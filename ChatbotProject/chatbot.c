@@ -268,6 +268,12 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
+
+	if(inc == 1){
+		snprintf(response, n , "Sorry I do not understand %s.", inv[0]);
+		return 0;
+	}
+
 	int len = 0;
 	int num = 1;
 	if(compare_token(inv[1], "is") == 0 || compare_token(inv[1], "are") == 0){
