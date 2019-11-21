@@ -31,7 +31,6 @@ typedef struct row{
 }row;
 
 header *k_arr = NULL;
-header* test = NULL;
 
 /*
  * Get the response to a question.
@@ -50,7 +49,6 @@ header* test = NULL;
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
 	header *cursor = k_arr;
-	k_arr = test;
 	while(cursor != NULL){
 		if(compare_token(cursor->intent, intent) == 0){
 			row *incursor = cursor->content;
@@ -189,17 +187,19 @@ int knowledge_read(FILE *f) {
  * Reset the knowledge base, removing all know entitities from all intents.
  */
 void knowledge_reset() {
-	
-	/* to be implemented */
-	while (test != NULL) {
-		free(test);
-		test = test->next;
+	header *temp = NULL;
+	row *r_temp1 = NULL, *r_temp2 = NULL;
+	while(k_arr!=NULL)	{
+		temp = k_arr;
+		r_temp1 = temp->content;
+		while(r_temp1!=NULL){
+			r_temp2 = r_temp1;
+			r_temp1 = r_temp1->next;
+			free(r_temp2);
+		}
+		k_arr = k_arr->next;
+		free(temp);
 	}
-	
-		
-	
-	
-	
 }
 
 
