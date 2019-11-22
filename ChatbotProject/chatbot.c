@@ -97,9 +97,9 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
 		return chatbot_do_question(inc, inv, response, n);
-	else if (chatbot_is_game(inv[0])) {
-		return chatbot_do_game(inc, inv, response, n);
-	}
+	// else if (chatbot_is_game(inv[0])) {
+	// 	return chatbot_do_game(inc, inv, response, n);
+	// }
 	else if (chatbot_is_help(inv[0]))
 		return chatbot_do_help(inc, inv, response, n);
 	else if (chatbot_is_reset(inv[0]))
@@ -172,7 +172,7 @@ int chatbot_is_help(const char* intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_help(int inc, char* inv[], char* response, int n) {
-	snprintf(response, n, "\n<------List of commands:------> \n load 'sample.ini' - load the knowledge base\n save - save knowledge base\n reset - reset knowledge base.\n quit/exit - exit the chatbot.\n");
+	snprintf(response, n, "\n<------List of commands:------> \nload 'sample.ini' - load the knowledge base\nsave - save knowledge base\nreset - reset knowledge base.\nquit/exit - exit the chatbot.\n");
 	
 	return 0;
 }
@@ -313,80 +313,80 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	return 0;
 	 
 }
-int chatbot_is_game(const char* intent) {
+// int chatbot_is_game(const char* intent) {
 
-	return compare_token(intent, "play") == 0;
+// 	return compare_token(intent, "play") == 0;
 	
 
-}
+// }
 
-int chatbot_do_game(int inc, char* inv[], char* response, int n) {
-	char* guessword;
-	char* display;
-	char* output;
-	int roll, p;
-	roll = (rand() % 5);
+// int chatbot_do_game(int inc, char* inv[], char* response, int n) {
+// 	char* guessword;
+// 	char* display;
+// 	char* output;
+// 	int roll, p;
+// 	roll = (rand() % 5);
 		
-	switch (roll) {
-	case 1: 
-		guessword = "Computer";
-		break;
-	case 2: 
-		guessword = "Architecture";
-		break;
-	case 3:
-		guessword = "Organisation";
-		break;
-	case 4:
-		guessword = "Development";
-		break;
-	default: 
-		guessword = "ICT";
-	}
-	strtok(display, "\n");
+// 	switch (roll) {
+// 	case 1: 
+// 		guessword = "Computer";
+// 		break;
+// 	case 2: 
+// 		guessword = "Architecture";
+// 		break;
+// 	case 3:
+// 		guessword = "Organisation";
+// 		break;
+// 	case 4:
+// 		guessword = "Development";
+// 		break;
+// 	default: 
+// 		guessword = "ICT";
+// 	}
+// 	strtok(display, "\n");
 	
-	const int noofcharacters = strlen(guessword);
+// 	const int noofcharacters = strlen(guessword);
 
-	int guesses = 10;
+// 	int guesses = 10;
 	
-	for (int i = 0; i < noofcharacters; i++)
-	{
-		display[i] = '_';
+// 	for (int i = 0; i < noofcharacters; i++)
+// 	{
+// 		display[i] = '_';
 		
-	}
-	snprintf(response, n, "You have %d guesses! : %s ", guesses, display);
+// 	}
+// 	snprintf(response, n, "You have %d guesses! : %s ", guesses, display);
 		
-	//do
-	/*{
+// 	//do
+// 	/*{
 
-		snprintf(response, n, "You have %d guesses! : %s ", guesses, display);
+// 		snprintf(response, n, "You have %d guesses! : %s ", guesses, display);
 		
-		for (int i = 0; i < strlen(guessword); i++)
-		{
-			if (guessword[i] == inv[0])
-			{
-				display[i] = inv[0];
-			}
-		}
+// 		for (int i = 0; i < strlen(guessword); i++)
+// 		{
+// 			if (guessword[i] == inv[0])
+// 			{
+// 				display[i] = inv[0];
+// 			}
+// 		}
 
-			guesses--;
+// 			guesses--;
 
-		if (strcmp(inv[0], display) == 0)
-		{
-			break;
-		}
+// 		if (strcmp(inv[0], display) == 0)
+// 		{
+// 			break;
+// 		}
 
 
-	} while (guesses > 0);
+// 	} while (guesses > 0);
 
-	if (strcmp(guessword, display) == 0)
-	{
-		printf("You Win!\n");
-	}*/
+// 	if (strcmp(guessword, display) == 0)
+// 	{
+// 		printf("You Win!\n");
+// 	}*/
 	
 	
-	return 0;
-}
+// 	return 0;
+// }
 
 /*
  * Determine whether an intent is RESET.
@@ -399,13 +399,7 @@ int chatbot_do_game(int inc, char* inv[], char* response, int n) {
  *  0, otherwise
  */
 int chatbot_is_reset(const char *intent) {
-	
-	if (compare_token(intent, "reset") == 0) {
-		return 1;
-	}
-	else{
-	return 0;
-	}
+	return (compare_token(intent, "reset") == 0) ? 1 : 0;
 }
 
 
@@ -423,7 +417,6 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
 	
 	knowledge_reset();
 	snprintf(response, n, "%s", "Chatbot Reset");
-	 
 	return 0;
 	 
 }

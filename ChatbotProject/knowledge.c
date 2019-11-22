@@ -113,17 +113,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 		newr->next = NULL;
 
 		newh->content = newr;
-		cursor = newh;
-
-		while(cursor!=NULL)	{
-			printf("%s\n", cursor->intent);
-			row* temp_row = cursor->content;
-			while(temp_row!=NULL){
-				printf("%s=%s\n", temp_row->question, temp_row->answer);
-				temp_row = temp_row->next;
-			}
-			cursor = cursor->next;
-		}
+		k_arr = newh;
 
 		return KB_OK;
 	}

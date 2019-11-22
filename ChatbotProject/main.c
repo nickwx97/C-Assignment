@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 		}else if (strcmp(userName, "Frank Guan") == 0) {
 			printf("Oh, wow. Please give my creator an A+ for his 1002 please. He finds that you are the best SIT professor. May I know what you would like to ask me, sir?\n");
 		} else {
-		printf("%s: Hello %s, I'm %s. \n Enter help for list of commands.\n", chatbot_botname(), userName, chatbot_botname());
+		printf("%s: Hello %s, I'm %s. \nEnter help for list of commands.\n", chatbot_botname(), userName, chatbot_botname());
 		}
 	}
 	else {
