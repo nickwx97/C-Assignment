@@ -237,7 +237,20 @@ void knowledge_reset() {
  *   f - the file
  */
 void knowledge_write(FILE *f) {
-	
-	/* to be implemented */
-	
+	header* temp = NULL;
+	row* r_temp1 = NULL, * r_temp2 = NULL;
+	while (k_arr != NULL) {
+		temp = k_arr;
+		r_temp1 = temp->content;
+		while (r_temp1 != NULL) {
+			r_temp2 = r_temp1;
+			r_temp1 = r_temp1->next;
+			free(r_temp2->question);
+			free(r_temp2->answer);
+			free(r_temp2);
+		}
+		k_arr = k_arr->next;
+		free(temp->intent);
+		free(temp);
+	}
 }
