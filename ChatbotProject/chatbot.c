@@ -302,8 +302,11 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		if(strlen(input) == 1){
 			snprintf(response, n , ":-(");
 		}else{
-			knowledge_put(inv[0], entity, input);
-			snprintf(response, n , "Thank you.");
+			if (knowledge_put(inv[0], entity, input) == KB_OK){
+				snprintf(response, n , "Thank you.");
+			}else{
+				snprintf(response, n , "An error has occured.");
+			}
 		}
 	}
 	 

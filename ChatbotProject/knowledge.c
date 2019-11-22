@@ -64,7 +64,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 		cursor = cursor->next;
 	}
 	
-	return KB_INVALID;
+	return KB_NOTFOUND;
 	
 }
 
@@ -95,6 +95,39 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	}
 	qn[strlen(entity)] = '\0';
 
+	if(cursor == NULL){
+		header* newh = (header*)malloc(sizeof(struct header));
+		row* newr = (row*)malloc(sizeof(struct row));
+
+		char n_intent[strlen(intent)];
+		for (int i = 0; i < strlen(intent); ++i)
+		{
+			n_intent[i] = tolower(intent[i]);
+		}
+
+		newh->intent = strdup(n_intent);
+		newh->next = NULL;
+
+		newr->question = strdup(qn);
+		newr->answer = strdup(response);
+		newr->next = NULL;
+
+		newh->content = newr;
+		cursor = newh;
+
+		while(cursor!=NULL)	{
+			printf("%s\n", cursor->intent);
+			row* temp_row = cursor->content;
+			while(temp_row!=NULL){
+				printf("%s=%s\n", temp_row->question, temp_row->answer);
+				temp_row = temp_row->next;
+			}
+			cursor = cursor->next;
+		}
+
+		return KB_OK;
+	}
+
 	while(cursor != NULL){
 		if(compare_token(cursor->intent, intent) == 0){
 			row* new = (row*)malloc(sizeof(struct row));
@@ -120,7 +153,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
  * Returns: the number of entity/response pairs successful read from the file
  */
 int knowledge_read(FILE *f) {
-	
+	knowledge_reset();
 	header* cursor = k_arr;
 	while(!feof(f)){
 		char temp[MAX_INPUT];
@@ -153,8 +186,9 @@ int knowledge_read(FILE *f) {
 			int alen = strlen(strchr(temp, '='))-1, qlen = strlen(temp)-alen+1;
 			char qn[qlen];
 			char ans[alen];
-			qn[qlen] = '\0';
-			ans[alen] = '\0';
+			memset(qn, '\0', qlen+1);
+			memset(ans, '\0', alen+1);
+
 			int check = 1, q=0, a=0;
 			for (int i = 0; i < strlen(temp); ++i){
 				if(temp[i] == '='){
