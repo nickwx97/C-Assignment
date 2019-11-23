@@ -99,8 +99,6 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	{
 		if(response[i] != '\n')
 			ans[i] = response[i];
-		else
-			printf("Flag\n");
 	}
 	qn[strlen(entity)] = '\0';
 	ans[strlen(ans)] = '\0';
@@ -167,7 +165,7 @@ int knowledge_read(FILE *f) {
 				temp[i-1]=temp[i];
 			}
 			temp[len-3]='\0';
-			printf("%s\n", temp);
+			//printf("%s\n", temp);
 			header* new = (header*)calloc(1,sizeof(struct header));
 			if(k_arr == NULL){
 				new->intent = strdup(temp);
@@ -210,7 +208,7 @@ int knowledge_read(FILE *f) {
 			}else{
 				new->next = cursor->content;
 			}
-			printf("%s=%s\n", qn, ans);
+			//printf("%s=%s\n", qn, ans);
 			cursor->content = new;
 		}
 	}
