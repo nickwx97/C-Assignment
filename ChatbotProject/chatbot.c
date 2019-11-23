@@ -449,116 +449,170 @@ int chatbot_is_save(const char *intent) {
  *   0 (the chatbot always continues chatting after saving knowledge)
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
-	//int saveinis ( char *pacPath, char *pacTopic, char *pacItem, char *pacValue)
-	int iItemLength;
-	int iValueLength;
-	int iError = 0;
-	char acLastTopicHeading[80];
-	acLastTopicHeading[0] = '\0';
 
-	strcpy(acIniPath, "sample.ini);
-
-	strcpy(acTempPath, "textfile.ini");
-	//strcat(acTempPath, "temp");
-
-	// add brackets to topic
-	strcpy(acTopicHeading, "[");
-	strcat(acTopicHeading, "customised answer");
-	strcat(acTopicHeading, "]\n");
-
-	strcpy(acItemHeading, response);
-	strcat(acItemHeading, "=");
-
-	iItemLength = strlen(acItemHeading);
-	iValueLength = strlen(n);
-
-	iFoundTopic = 0;
-	iFoundItem = 0;
-
-	if ((pFTempIni = fopen(acTempPath, "w")) == NULL) {
-		printf("could not open temp ini file to write settings\n");
-		iError = 1;
-		return (iError);
-	}
-
-	// try to open current sample file for reading
-	if ((pFIniFile = fopen(acIniPath, "r")) != NULL) {
-		// read a line from the sample file until EOF
-		while (fgets(acIniLine, 159, pFIniFile) != NULL) {
-			// the item has been found so continue reading file to end
-			if (iFoundItem == 1) {
-				fputs(acIniLine, pFTempIni);
-				continue;
+	if(inc == 1){
+		snprintf(response, n, "File path not specified for SAVE");
+	}else if (inc == 2){
+		printf("%s\n", inv[1]);
+		FILE *f = fopen(inv[1], "r");
+		if(f != NULL){
+			printf("%s: File already exists, overwrite? (Yes/ No) (Defaults to No)", chatbot_botname());
+			char input[MAX_INPUT];
+			fgets(input, MAX_INPUT, stdin);
+			input[strlen(input) - 1] = '\0';
+			if(strlen(input) == 1 || compare_token(input, "no") == 0){
+				fclose(f);
+				snprintf(response, n, "Save not done.");
+				return 0;
+			}else{
+				f = fopen(inv[1], "w");
+				knowledge_write(f);
+				fclose(f);
+				snprintf(response, n, "Saved to %s", inv[1]);
 			}
-			// topic has not been found yet
-			if (iFoundTopic == 0) {
-				if (strcmp(acTopicHeading, acIniLine) == 0) {
-					// found the topic
-					iFoundTopic = 1;
-				}
-				fputs(acIniLine, pFTempIni);
-				continue;
-			}
-			// the item has not been found yet
-			if ((iFoundItem == 0) && (iFoundTopic == 1)) {
-				if (strncmp(acItemHeading, acIniLine, iItemLength) == 0) {
-					// found the item
-					iFoundItem = 1;
-					if (iValueLength > 0) {
-						fputs(acItemHeading, pFTempIni);
-						fputs(response, pFTempIni);
-						fputs("\n", pFTempIni);
-					}
-					continue;
-				}
-				// if newline or [, the end of the topic has been reached
-				// so add the item to the topic
-				if ((acIniLine[0] == '\n') || (acIniLine[0] == '[')) {
-					iFoundItem = 1;
-					if (iValueLength > 0) {
-						fputs(acItemHeading, pFTempIni);
-						fputs(response, pFTempIni);
-						fputs("\n", pFTempIni);
-					}
-					fputs("\n", pFTempIni);
-					if (acIniLine[0] == '[') {
-						fputs(acIniLine, pFTempIni);
-					}
-					continue;
-				}
-				// if the item has not been found, write line to temp file
-				if (iFoundItem == 0) {
-					fputs(acIniLine, pFTempIni);
-					continue;
-				}
-			}
+		}else{
+			fclose(f);
+			f = fopen(inv[2], "w");
+			knowledge_write(f);
+			fclose(f);
+			snprintf(response, n, "Saved to %s", inv[1]);
 		}
-		fclose(pFIniFile);
-	}
-	// still did not find the item after reading the sample file
-	if (iFoundItem == 0) {
-		// sample file does not exist
-		// or topic does not exist so write to temp file
-		if (iValueLength > 0) {
-			if (iFoundTopic == 0) {
-				fputs(acTopicHeading, pFTempIni);
+	}else if(inc == 3 && compare_token(inv[1], "to") == 0){
+		FILE *f = fopen(inv[2], "r");
+		if(f != NULL){
+			printf("%s: File already exists, overwrite? (Yes/ No) (Defaults to No)", chatbot_botname());
+			char input[MAX_INPUT];
+			fgets(input, MAX_INPUT, stdin);
+			input[strlen(input) - 1] = '\0';
+			if(strlen(input) == 1 || compare_token(input, "no") == 0){
+				fclose(f);
+				snprintf(response, n, "Save not done.");
+				return 0;
+			}else{
+				fclose(f);
+				f = fopen(inv[2], "w");
+				knowledge_write(f);
+				fclose(f);
+				snprintf(response, n, "Saved to %s", inv[2]);
 			}
-			fputs(acItemHeading, pFTempIni);
-			fputs(response, pFTempIni);
-			fputs("\n\n", pFTempIni);
+		}else{
+			f = fopen(inv[2], "w");
+			knowledge_write(f);
+			fclose(f);
+			snprintf(response, n, "Saved to %s", inv[2]);
 		}
 	}
+	return 0;
+	// //int saveinis ( char *pacPath, char *pacTopic, char *pacItem, char *pacValue)
+	// int iItemLength;
+	// int iValueLength;
+	// int iError = 0;
+	// char acLastTopicHeading[80];
+	// acLastTopicHeading[0] = '\0';
 
-	fclose(pFTempIni);
+	// strcpy(acIniPath, "sample.ini");
 
-	//delete the ini file
-	remove(acIniPath);
+	// strcpy(acTempPath, "textfile.ini");
+	// //strcat(acTempPath, "temp");
 
-	// rename the temp file to ini file
-	rename(acTempPath, acIniPath);
+	// // add brackets to topic
+	// strcpy(acTopicHeading, "[");
+	// strcat(acTopicHeading, "customised answer");
+	// strcat(acTopicHeading, "]\n");
 
-	return (iError);
-	return 0; 
+	// strcpy(acItemHeading, response);
+	// strcat(acItemHeading, "=");
+
+	// iItemLength = strlen(acItemHeading);
+	// iValueLength = strlen(n);
+
+	// iFoundTopic = 0;
+	// iFoundItem = 0;
+
+	// if ((pFTempIni = fopen(acTempPath, "w")) == NULL) {
+	// 	printf("could not open temp ini file to write settings\n");
+	// 	iError = 1;
+	// 	return (iError);
+	// }
+
+	// // try to open current sample file for reading
+	// if ((pFIniFile = fopen(acIniPath, "r")) != NULL) {
+	// 	// read a line from the sample file until EOF
+	// 	while (fgets(acIniLine, 159, pFIniFile) != NULL) {
+	// 		// the item has been found so continue reading file to end
+	// 		if (iFoundItem == 1) {
+	// 			fputs(acIniLine, pFTempIni);
+	// 			continue;
+	// 		}
+	// 		// topic has not been found yet
+	// 		if (iFoundTopic == 0) {
+	// 			if (strcmp(acTopicHeading, acIniLine) == 0) {
+	// 				// found the topic
+	// 				iFoundTopic = 1;
+	// 			}
+	// 			fputs(acIniLine, pFTempIni);
+	// 			continue;
+	// 		}
+	// 		// the item has not been found yet
+	// 		if ((iFoundItem == 0) && (iFoundTopic == 1)) {
+	// 			if (strncmp(acItemHeading, acIniLine, iItemLength) == 0) {
+	// 				// found the item
+	// 				iFoundItem = 1;
+	// 				if (iValueLength > 0) {
+	// 					fputs(acItemHeading, pFTempIni);
+	// 					fputs(response, pFTempIni);
+	// 					fputs("\n", pFTempIni);
+	// 				}
+	// 				continue;
+	// 			}
+	// 			// if newline or [, the end of the topic has been reached
+	// 			// so add the item to the topic
+	// 			if ((acIniLine[0] == '\n') || (acIniLine[0] == '[')) {
+	// 				iFoundItem = 1;
+	// 				if (iValueLength > 0) {
+	// 					fputs(acItemHeading, pFTempIni);
+	// 					fputs(response, pFTempIni);
+	// 					fputs("\n", pFTempIni);
+	// 				}
+	// 				fputs("\n", pFTempIni);
+	// 				if (acIniLine[0] == '[') {
+	// 					fputs(acIniLine, pFTempIni);
+	// 				}
+	// 				continue;
+	// 			}
+	// 			// if the item has not been found, write line to temp file
+	// 			if (iFoundItem == 0) {
+	// 				fputs(acIniLine, pFTempIni);
+	// 				continue;
+	// 			}
+	// 		}
+	// 	}
+	// 	fclose(pFIniFile);
+	// }
+	// // still did not find the item after reading the sample file
+	// if (iFoundItem == 0) {
+	// 	// sample file does not exist
+	// 	// or topic does not exist so write to temp file
+	// 	if (iValueLength > 0) {
+	// 		if (iFoundTopic == 0) {
+	// 			fputs(acTopicHeading, pFTempIni);
+	// 		}
+	// 		fputs(acItemHeading, pFTempIni);
+	// 		fputs(response, pFTempIni);
+	// 		fputs("\n\n", pFTempIni);
+	// 	}
+	// }
+
+	// fclose(pFTempIni);
+
+	// //delete the ini file
+	// remove(acIniPath);
+
+	// // rename the temp file to ini file
+	// rename(acTempPath, acIniPath);
+
+	// return (iError);
+	// return 0; 
 }
  
  

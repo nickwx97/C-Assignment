@@ -188,7 +188,8 @@ int knowledge_read(FILE *f) {
 				if (check){
 					qn[q++] = tolower(temp[i]);
 				}else{
-					ans[a++] = temp[i];
+					if(temp[i] != '\n')
+						ans[a++] = temp[i];
 				}
 			}
 			row* new = (row*)calloc(1, sizeof(struct row));
@@ -237,20 +238,28 @@ void knowledge_reset() {
  *   f - the file
  */
 void knowledge_write(FILE *f) {
-	header* temp = NULL;
-	row* r_temp1 = NULL, * r_temp2 = NULL;
-	while (k_arr != NULL) {
-		temp = k_arr;
-		r_temp1 = temp->content;
-		while (r_temp1 != NULL) {
-			r_temp2 = r_temp1;
-			r_temp1 = r_temp1->next;
-			free(r_temp2->question);
-			free(r_temp2->answer);
-			free(r_temp2);
+	header *cursor = k_arr;
+	row *row_cursor = NULL;
+
+	while(cursor != NULL){
+
+		fwrite("[", 1, 1, f);
+		fwrite(cursor->intent, strlen(cursor->intent), 1, f);
+		fwrite("]\n", 2, 1, f);
+
+		row_cursor = cursor->content;
+		while(row_cursor != NULL){
+			fwrite(row_cursor->question, strlen(row_cursor->question), 1, f);
+			fwrite("=", 1, 1, f);
+			fwrite(row_cursor->answer, strlen(row_cursor->answer), 1, f);
+			if(row_cursor->next != NULL)
+				fwrite("\n", 1, 1, f);
+			row_cursor = row_cursor->next;
 		}
-		k_arr = k_arr->next;
-		free(temp->intent);
-		free(temp);
+		if(cursor->next != NULL)
+			fwrite("\n\n", 2, 1, f);
+
+		cursor = cursor->next;
 	}
+
 }
