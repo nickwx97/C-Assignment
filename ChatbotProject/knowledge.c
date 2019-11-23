@@ -88,12 +88,22 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	
 	header *cursor = k_arr;
 	char qn[strlen(entity)];
+	char ans[strlen(response)];
 	memset(qn, '\0', strlen(entity));
+	memset(ans, '\0', strlen(response));
 	for (int i = 0; i < strlen(entity); ++i)
 	{
 		qn[i] = tolower(entity[i]);
 	}
+	for (int i = 0; i < strlen(response); ++i)
+	{
+		if(response[i] != '\n')
+			ans[i] = response[i];
+		else
+			printf("Flag\n");
+	}
 	qn[strlen(entity)] = '\0';
+	ans[strlen(ans)] = '\0';
 
 	if(cursor == NULL){
 		header* newh = (header*)malloc(sizeof(struct header));
@@ -109,7 +119,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 		newh->next = NULL;
 
 		newr->question = strdup(qn);
-		newr->answer = strdup(response);
+		newr->answer = strdup(ans);
 		newr->next = NULL;
 
 		newh->content = newr;

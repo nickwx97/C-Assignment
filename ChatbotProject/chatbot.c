@@ -456,7 +456,7 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 		printf("%s\n", inv[1]);
 		FILE *f = fopen(inv[1], "r");
 		if(f != NULL){
-			printf("%s: File already exists, overwrite? (Yes/ No) (Defaults to No)\n%s: ", chatbot_botname(), chatbot_username());
+			printf("%s: File already exists, overwrite? (Yes/ No) (Defaults to Yes)\n%s: ", chatbot_botname(), chatbot_username());
 			char input[MAX_INPUT];
 			fgets(input, MAX_INPUT, stdin);
 			input[strlen(input) - 1] = '\0';
@@ -484,10 +484,11 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 			fclose(f);
 			snprintf(response, n, "Saved to %s", inv[1]);
 		}
+		fclose(f);
 	}else if(inc == 3 && compare_token(inv[1], "to") == 0){
 		FILE *f = fopen(inv[2], "r");
 		if(f != NULL){
-			printf("%s: File already exists, overwrite? (Yes/ No) (Defaults to No)", chatbot_botname());
+			printf("%s: File already exists, overwrite? (Yes/ No) (Defaults to Yes)", chatbot_botname());
 			char input[MAX_INPUT];
 			fgets(input, MAX_INPUT, stdin);
 			input[strlen(input) - 1] = '\0';
@@ -515,6 +516,7 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 			fclose(f);
 			snprintf(response, n, "Saved to %s", inv[2]);
 		}
+		fclose(f);
 	}
 	return 0;
 	// //int saveinis ( char *pacPath, char *pacTopic, char *pacItem, char *pacValue)
