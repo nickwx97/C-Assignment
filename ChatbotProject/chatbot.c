@@ -456,16 +456,19 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 		printf("%s\n", inv[1]);
 		FILE *f = fopen(inv[1], "r");
 		if(f != NULL){
-			printf("%s: File already exists, overwrite? (Yes/ No) (Defaults to No)", chatbot_botname());
+			printf("%s: File already exists, overwrite? (Yes/ No) (Defaults to No)\n%s: ", chatbot_botname(), chatbot_username());
 			char input[MAX_INPUT];
 			fgets(input, MAX_INPUT, stdin);
 			input[strlen(input) - 1] = '\0';
 			if(strlen(input) == 1 || compare_token(input, "no") == 0){
 				fclose(f);
 				snprintf(response, n, "Save not done.");
-				return 0;
 			}else{
 				f = fopen(inv[1], "w");
+				if(f == NULL){
+					snprintf(response, n, "Unable to write to %s", inv[1]);
+					return 0;
+				}
 				knowledge_write(f);
 				fclose(f);
 				snprintf(response, n, "Saved to %s", inv[1]);
@@ -473,6 +476,10 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 		}else{
 			fclose(f);
 			f = fopen(inv[2], "w");
+			if(f == NULL){
+				snprintf(response, n, "Unable to write to %s", inv[1]);
+				return 0;
+			}
 			knowledge_write(f);
 			fclose(f);
 			snprintf(response, n, "Saved to %s", inv[1]);
@@ -487,16 +494,23 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 			if(strlen(input) == 1 || compare_token(input, "no") == 0){
 				fclose(f);
 				snprintf(response, n, "Save not done.");
-				return 0;
 			}else{
 				fclose(f);
 				f = fopen(inv[2], "w");
+				if(f == NULL){
+					snprintf(response, n, "Unable to write to %s", inv[2]);
+					return 0;
+				}
 				knowledge_write(f);
 				fclose(f);
 				snprintf(response, n, "Saved to %s", inv[2]);
 			}
 		}else{
 			f = fopen(inv[2], "w");
+			if(f == NULL){
+				snprintf(response, n, "Unable to write to %s", inv[2]);
+				return 0;
+			}
 			knowledge_write(f);
 			fclose(f);
 			snprintf(response, n, "Saved to %s", inv[2]);
