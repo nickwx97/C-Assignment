@@ -452,11 +452,14 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	//int saveinis ( char *pacPath, char *pacTopic, char *pacItem, char *pacValue)
 	int iItemLength;
 	int iValueLength;
+	int iFoundTopic, iFoundItem;
 	int iError = 0;
-	char acLastTopicHeading[80];
+	char acLastTopicHeading[80],  acTempPath[40], acTopicHeading[40], acItemHeading[40], acIniLine[500];
+	char acIniPath[40];
 	acLastTopicHeading[0] = '\0';
+	FILE *pFTempIni, *pFIniFile;
 
-	strcpy(acIniPath, "sample.ini);
+	strcpy(acIniPath, "sample.ini");
 
 	strcpy(acTempPath, "textfile.ini");
 	//strcat(acTempPath, "temp");
