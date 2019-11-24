@@ -467,6 +467,7 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 				f = fopen(inv[1], "w");
 				if(f == NULL){
 					snprintf(response, n, "Unable to write to %s", inv[1]);
+					perror("error");
 					return 0;
 				}
 				knowledge_write(f);
@@ -475,9 +476,10 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 			}
 		}else{
 			fclose(f);
-			f = fopen(inv[2], "w");
+			f = fopen(inv[1], "w");
 			if(f == NULL){
 				snprintf(response, n, "Unable to write to %s", inv[1]);
+				perror("error");
 				return 0;
 			}
 			knowledge_write(f);
