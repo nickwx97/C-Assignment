@@ -39,13 +39,13 @@
  * chatbot_username(), respectively. The main loop will print the strings
  * returned by these functions at the start of each line.
  */
- 
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include "chat1002.h"
- 
- 
+
+
 /*
  * Get the name of the chatbot.
  *
@@ -520,8 +520,8 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	}
 	return 0;
 }
- 
- 
+
+
 /*
  * Determine which an intent is smalltalk.
  *
@@ -567,7 +567,7 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
 			snprintf(response, n, "%s", "Good evening.");
 		}
 		else if (compare_token(inv[i], "goodbye") == 0) {
-			//chatbot_do_exit(inc, inv, response, n); //this function returns 1 and exits the program
+			snprintf(response, n, "%s", "Goodbye.");
 			return 1;
 		}else if (compare_token(inv[i], "hello") == 0){
 			snprintf(response, n, "%s", "Hello.");
