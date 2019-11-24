@@ -100,6 +100,8 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 		if(response[i] != '\n')
 			ans[i] = response[i];
 	}
+
+
 	qn[strlen(entity)] = '\0';
 	ans[strlen(ans)] = '\0';
 
@@ -130,7 +132,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 		if(compare_token(cursor->intent, intent) == 0){
 			row* new = (row*)malloc(sizeof(struct row));
 			new->question = strdup(qn);
-			new->answer = strdup(response);
+			new->answer = strdup(ans);
 			new->next = cursor->content;
 			cursor->content = new;
 			return KB_OK;
@@ -265,7 +267,7 @@ void knowledge_write(FILE *f) {
 			row_cursor = row_cursor->next;
 		}
 		if(cursor->next != NULL)
-			fwrite("\n\n", 2, 1, f);
+			fwrite("\n", 1, 1, f);
 
 		cursor = cursor->next;
 	}
