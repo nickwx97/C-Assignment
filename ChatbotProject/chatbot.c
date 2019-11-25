@@ -272,6 +272,9 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	if(inc == 1){
 		snprintf(response, n , "Sorry I do not understand %s.", inv[0]);
 		return 0;
+	}else if(inc == 2 && (compare_token(inv[1], "is") == 0 || compare_token(inv[1], "are") == 0)){
+		snprintf(response, n , "Sorry I do not understand %s %s.", inv[0], inv[1]);
+		return 0;
 	}
 
 	int len = 0;
