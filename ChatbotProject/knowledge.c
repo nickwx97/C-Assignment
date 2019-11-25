@@ -91,16 +91,13 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	char ans[strlen(response)];
 	memset(qn, '\0', strlen(entity));
 	memset(ans, '\0', strlen(response));
-	for (int i = 0; i < strlen(entity); ++i)
-	{
+	for (int i = 0; i < strlen(entity); ++i){
 		qn[i] = tolower(entity[i]);
 	}
-	for (int i = 0; i < strlen(response); ++i)
-	{
+	for (int i = 0; i < strlen(response); ++i){
 		if(response[i] != '\n')
 			ans[i] = response[i];
 	}
-
 
 	qn[strlen(entity)] = '\0';
 	ans[strlen(ans)] = '\0';
@@ -109,11 +106,12 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 		header* newh = (header*)malloc(sizeof(struct header));
 		row* newr = (row*)malloc(sizeof(struct row));
 
-		char n_intent[strlen(intent)];
-		for (int i = 0; i < strlen(intent); ++i)
-		{
+		char n_intent[strlen(intent)+1];
+		memset(n_intent, '\0', sizeof(n_intent));
+		for (int i = 0; i < strlen(intent); ++i){
 			n_intent[i] = tolower(intent[i]);
 		}
+		printf("%s\n", n_intent);
 
 		newh->intent = strdup(n_intent);
 		newh->next = NULL;
@@ -135,6 +133,28 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 			new->answer = strdup(ans);
 			new->next = cursor->content;
 			cursor->content = new;
+			return KB_OK;
+		}else if(cursor->next == NULL){
+			header* newh = (header*)malloc(sizeof(struct header));
+			row* newr = (row*)malloc(sizeof(struct row));
+
+			char n_intent[strlen(intent)+1];
+			memset(n_intent, '\0', sizeof(n_intent));
+			for (int i = 0; i < strlen(intent); ++i){
+				n_intent[i] = tolower(intent[i]);
+			}
+			printf("%s\n", n_intent);
+
+			newh->intent = strdup(n_intent);
+			newh->next = k_arr;
+
+			newr->question = strdup(qn);
+			newr->answer = strdup(ans);
+			newr->next = NULL;
+
+			newh->content = newr;
+			k_arr = newh;
+
 			return KB_OK;
 		}
 		cursor = cursor->next;
