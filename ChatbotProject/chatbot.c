@@ -191,9 +191,9 @@ int is_quantifier(const char* intent){
 int chatbot_do_update(int inc, char* inv[], char* response, int n) {
 
 	if (inc == 1){
-		snprintf(response, n, "Something went wrong... No updates done.");
+		snprintf(response, n, "So... Are you going to tell me the question you want to update?");
 	}else if(inc == 2){
-		snprintf(response, n, "Something went wrong... No updates done to %s.", inv[1]);
+		snprintf(response, n, "What? I cannot update the definition of a word...");
 	}else if(chatbot_is_question(inv[1])){
 		int len = 0;
 		int num = 2;
@@ -215,11 +215,14 @@ int chatbot_do_update(int inc, char* inv[], char* response, int n) {
 		memset(initial_ans, '\0', n);
 		int ret = knowledge_get(inv[1], entity, initial_ans, n);
 		if(ret == KB_OK){
-			printf("Original answer: %s\nPlease enter your new answer. (Leave blank to cancel update)\n", initial_ans);
+			if(num == 2)
+				printf("%s: I know \"%s %s\" is \"%s\". Tell me otherwise (Leave blank to cancel update).\n%s: ", chatbot_botname(), inv[1], entity, initial_ans, chatbot_username());
+			else
+				printf("%s: I know \"%s %s %s\" is \"%s\". Tell me otherwise (Leave blank to cancel update).\n%s: ", chatbot_botname(), inv[1], inv[2], entity, initial_ans, chatbot_username());
 			char input[MAX_INPUT];
 			fgets(input, MAX_INPUT, stdin);
 			if(strlen(input) == 1){
-				snprintf(response, n , ":-(");
+				snprintf(response, n , "Update cancelled.");
 			}else{
 				ret = knowledge_delete(inv[1], entity);
 				ret += knowledge_put(inv[1], entity, input);

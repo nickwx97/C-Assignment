@@ -60,8 +60,12 @@ int chatbot_do_help(int inc, char* inv[], char* response, int n);
 int chatbot_is_help(const char* intent);
 int chatbot_do_identity(int inc, char* inv[], char* response, int n);
 int chatbot_is_identity(int inc, char* inv[]);
+int chatbot_is_update(const char* intent);
+int is_quantifier(const char* intent);
+int chatbot_do_update(int inc, char* inv[], char* response, int n);
 
 /* functions defined in knowledge.c */
+int knowledge_delete(const char *intent, const char *entity);
 int knowledge_get(const char *intent, const char *entity, char *response, int n);
 int knowledge_put(const char *intent, const char *entity, const char *response);
 void knowledge_reset();
