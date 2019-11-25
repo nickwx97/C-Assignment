@@ -156,6 +156,7 @@ int knowledge_read(FILE *f) {
 	knowledge_reset();
 	header* cursor = k_arr;
 	while(!feof(f)){
+		
 		char temp[MAX_INPUT];
 		fgets(temp, MAX_INPUT, f);
 		if(strlen(temp) == 1){
@@ -183,6 +184,7 @@ int knowledge_read(FILE *f) {
 				cursor = new;
 			}
 		}else{
+			num_of_lines++;
 			int alen = strlen(strchr(temp, '='))-1, qlen = strlen(temp)-alen+1;
 			char qn[qlen];
 			char ans[alen];
