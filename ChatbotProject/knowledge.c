@@ -111,7 +111,6 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 		for (int i = 0; i < strlen(intent); ++i){
 			n_intent[i] = tolower(intent[i]);
 		}
-		printf("%s\n", n_intent);
 
 		newh->intent = strdup(n_intent);
 		newh->next = NULL;
@@ -143,7 +142,6 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 			for (int i = 0; i < strlen(intent); ++i){
 				n_intent[i] = tolower(intent[i]);
 			}
-			printf("%s\n", n_intent);
 
 			newh->intent = strdup(n_intent);
 			newh->next = k_arr;

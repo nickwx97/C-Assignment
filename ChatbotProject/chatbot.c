@@ -300,8 +300,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		char input[MAX_INPUT];
 		fgets(input, MAX_INPUT, stdin);
 
-
-
 		if(strlen(input) == 1){
 			snprintf(response, n , ":-(");
 		}else{
