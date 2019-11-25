@@ -231,7 +231,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 			return 0;
 		}
 	}
-	knowledge_read(f);
+	int num_of_lines = knowledge_read(f);
 	fclose(f);
 	snprintf(response, n, "%d lines from\" %s\" loaded.",num_of_lines,inv[1]);
 	return 0;

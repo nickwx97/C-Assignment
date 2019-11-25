@@ -153,6 +153,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
  * Returns: the number of entity/response pairs successful read from the file
  */
 int knowledge_read(FILE *f) {
+	int num_of_lines = 0;
 	knowledge_reset();
 	header* cursor = k_arr;
 	while(!feof(f)){
@@ -216,7 +217,7 @@ int knowledge_read(FILE *f) {
 			cursor->content = new;
 		}
 	}
-	return 0;
+	return num_of_lines;
 }
 
 
