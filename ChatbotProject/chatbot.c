@@ -250,7 +250,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  *  0, otherwise
  */
 int chatbot_is_question(const char *intent) {
-	return compare_token(intent, "who") == 0 || compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0;
+	return compare_token(intent, "who") == 0 || compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "when") == 0 || compare_token(intent, "why") == 0 || compare_token(intent, "how") == 0;
 }
 
 
