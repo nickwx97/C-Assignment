@@ -91,6 +91,8 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
+	else if (chatbot_is_identity(inc, inv))
+		return chatbot_do_identity(inc, inv, response, n);
 	else if (chatbot_is_smalltalk(inv[0]))
 		return chatbot_do_smalltalk(inc, inv, response, n);
 	else if (chatbot_is_load(inv[0]))
@@ -177,7 +179,51 @@ int chatbot_do_help(int inc, char* inv[], char* response, int n) {
 	return 0;
 }
 
+/*
+ * Determine whether an intent is IDENTITY.
+ *
+ * Returns:
+ *  1, if the intent is IDENTITY
+ *  0, otherwise
+ */
+int chatbot_is_identity(int inc, char* inv[]){
+	if(inc == 2 || inc == 3){
+		if(compare_token(inv[0], "who") == 0){
+			if(compare_token(inv[1], "are") == 0 || compare_token(inv[1], "is") == 0){
+				if(compare_token(inv[2], "you") == 0){
+					return 1;
+				}
+			}else if(compare_token(inv[1], "you") == 0){
+				return 1;
+			}else if(compare_token(inv[1], "am") == 0){
+				if(compare_token(inv[2], "I") == 0){
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
 
+int chatbot_do_identity(int inc, char* inv[], char* response, int n) {
+
+	if(inc == 2 || inc == 3){
+		if(compare_token(inv[0], "who") == 0){
+			if(compare_token(inv[1], "are") == 0 || compare_token(inv[1], "is") == 0){
+				if(compare_token(inv[2], "you") == 0){
+					snprintf(response, n , "Hmm... I wonder who am I...?");
+				}
+			}else if(compare_token(inv[1], "you") == 0){
+				snprintf(response, n , "Hmm... I wonder who am I...?");
+			}else if(compare_token(inv[1], "am") == 0){
+				if(compare_token(inv[2], "I") == 0){
+					snprintf(response, n, "Didn't you say your name is %s?", chatbot_username());
+				}
+			}
+		}
+	}
+	return 0;
+}
 /*
  * Determine whether an intent is LOAD.
  *
