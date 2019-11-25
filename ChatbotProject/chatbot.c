@@ -99,6 +99,8 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
 		return chatbot_do_question(inc, inv, response, n);
+	else if (chatbot_is_update(inv[0]))
+		return chatbot_do_update(inc, inv, response, n);
 	// else if (chatbot_is_game(inv[0])) {
 	// 	return chatbot_do_game(inc, inv, response, n);
 	// }
@@ -150,6 +152,85 @@ int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
 	 
 }
 
+/*
+ * Determine whether an intent is HELP.
+ *
+ * Input:
+ *  intent - the intent
+ *
+ * Returns:
+ *  1, if the intent is "update"
+ *  0, otherwise
+ */
+int chatbot_is_update(const char* intent) {
+
+	return compare_token(intent, "update") == 0;
+
+}
+
+/*
+ * Determine whether an intent is QUANTIFIER.
+ *
+ * Input:
+ *  intent - the intent
+ *
+ * Returns:
+ *  1, if the intent is "is" or "are"
+ *  0, otherwise
+ */
+int is_quantifier(const char* intent){
+	return compare_token(intent, "is") == 0 || compare_token(intent, "are") == 0;
+}
+
+/*
+ * Perform the UPDATE intent.
+ *
+ * Returns:
+ *   0 (the chatbot always continues chatting after a question)
+ */
+int chatbot_do_update(int inc, char* inv[], char* response, int n) {
+
+	if (inc == 1){
+		snprintf(response, n, "Something went wrong... No updates done.");
+	}else if(inc == 2){
+		snprintf(response, n, "Something went wrong... No updates done to %s.", inv[1]);
+	}else if(chatbot_is_question(inv[1])){
+		int len = 0;
+		int num = 2;
+		if(is_quantifier(inv[2])){
+			num = 3;
+		}
+
+		for (int i = num; i < inc; ++i){
+			len+=strlen(inv[i]);
+		}
+		char entity[len];
+		memset(entity, '\0', len);
+		strcat(entity, inv[num]);
+		for (int i = num+1; i < inc; ++i){
+			strcat(entity, " ");
+			strcat(entity, inv[i]);
+		}
+		char initial_ans[n];
+		memset(initial_ans, '\0', n);
+		int ret = knowledge_get(inv[1], entity, initial_ans, n);
+		if(ret == KB_OK){
+			printf("Original answer: %s\nPlease enter your new answer. (Leave blank to cancel update)\n", initial_ans);
+			char input[MAX_INPUT];
+			fgets(input, MAX_INPUT, stdin);
+			if(strlen(input) == 1){
+				snprintf(response, n , ":-(");
+			}else{
+				// delete qn
+				// add qn with input
+			}
+		}else if (ret == KB_NOTFOUND){
+			snprintf(response, n, "Question does not exist.\n");
+		}
+	}
+
+	return 0;
+}
 
 /*
  * Determine whether an intent is HELP.
@@ -318,14 +399,14 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	if(inc == 1){
 		snprintf(response, n , "Sorry I do not understand %s.", inv[0]);
 		return 0;
-	}else if(inc == 2 && (compare_token(inv[1], "is") == 0 || compare_token(inv[1], "are") == 0)){
+	}else if(inc == 2 && (is_quantifier(inv[1]))){
 		snprintf(response, n , "Sorry I do not understand %s %s.", inv[0], inv[1]);
 		return 0;
 	}
 
 	int len = 0;
 	int num = 1;
-	if(compare_token(inv[1], "is") == 0 || compare_token(inv[1], "are") == 0){
+	if(is_quantifier(inv[1])){
 		num = 2;
 	}
 
