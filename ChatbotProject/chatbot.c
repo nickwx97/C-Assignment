@@ -221,8 +221,11 @@ int chatbot_do_update(int inc, char* inv[], char* response, int n) {
 			if(strlen(input) == 1){
 				snprintf(response, n , ":-(");
 			}else{
-				// delete qn
-				// add qn with input
+				ret = knowledge_delete(inv[1], entity);
+				ret += knowledge_put(inv[1], entity, input);
+				if(ret == 0){
+					snprintf(response, n, "Updated.");
+				}
 			}
 		}else if (ret == KB_NOTFOUND){
 			snprintf(response, n, "Question does not exist.\n");

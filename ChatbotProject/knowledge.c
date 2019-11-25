@@ -68,6 +68,35 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	
 }
 
+int knowledge_delete(const char *intent, const char *entity){
+	header *cursor = k_arr;
+	while(cursor != NULL){
+		if(compare_token(cursor->intent, intent) == 0){
+			row *incursor = cursor->content;
+			row *prevcursor = NULL;
+			while(incursor != NULL){
+				if(compare_token(incursor->question, entity) == 0){
+					if(prevcursor != NULL){
+						prevcursor->next = incursor->next;
+					}else{
+						cursor->content = incursor->next;
+					}
+					free(incursor->question);
+					free(incursor->answer);
+					free(incursor);
+					return KB_OK;
+				}
+				prevcursor = incursor;
+				incursor = incursor->next;
+			}
+			return KB_NOTFOUND;
+		}
+		cursor = cursor->next;
+	}
+	
+	return KB_NOTFOUND;
+}
+
 
 /*
  * Insert a new response to a question. If a response already exists for the
