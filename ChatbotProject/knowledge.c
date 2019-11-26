@@ -297,12 +297,13 @@ void knowledge_reset() {
  * Input:
  *   f - the file
  */
-void knowledge_write(FILE * f) {
+int knowledge_write(FILE * f) {
+	int num_of_rows = 0;
     header * cursor = k_arr;
     row * row_cursor = NULL;
 
     while (cursor != NULL) {
-
+		
         fwrite("[", 1, 1, f);
         fwrite(cursor -> intent, strlen(cursor -> intent), 1, f);
         fwrite("]\n", 2, 1, f);
@@ -315,9 +316,11 @@ void knowledge_write(FILE * f) {
             if (row_cursor -> next != NULL)
                 fwrite("\n", 1, 1, f);
             row_cursor = row_cursor -> next;
+			num_of_rows++;
         }
         if (cursor -> next != NULL)
             fwrite("\n", 1, 1, f);
         cursor = cursor -> next;
     }
+	return num_of_rows;
 }

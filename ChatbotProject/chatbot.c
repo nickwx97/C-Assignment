@@ -46,6 +46,8 @@
 
 #include <ctype.h>
 
+#include <stdlib.h>
+
 #include "chat1002.h"
 
 /*
@@ -82,33 +84,41 @@ int chatbot_main(int inc, char * inv[], char * response, int n) {
     if (inc < 1) {
         snprintf(response, n, " ");
         return 0;
-    }
+	}
+	/*else if (chatbot_is_swear(inc, inv, response, n)) {
+		return 0;
+	}*/
 
     /* look for an intent and invoke the corresponding do_* function */
-    if (chatbot_is_exit(inv[0]))
-        return chatbot_do_exit(inc, inv, response, n);
-    else if (chatbot_is_identity(inc, inv))
-        return chatbot_do_identity(inc, inv, response, n);
-    else if (chatbot_is_smalltalk(inv[0]))
-        return chatbot_do_smalltalk(inc, inv, response, n);
-    else if (chatbot_is_load(inv[0]))
-        return chatbot_do_load(inc, inv, response, n);
-    else if (chatbot_is_delete(inv[0]))
-        return chatbot_do_delete(inc, inv, response, n);
-    else if (chatbot_is_question(inv[0]))
-        return chatbot_do_question(inc, inv, response, n);
-    else if (chatbot_is_update(inv[0]))
-        return chatbot_do_update(inc, inv, response, n);
-    else if (chatbot_is_help(inv[0]))
-        return chatbot_do_help(inc, inv, response, n);
-    else if (chatbot_is_reset(inv[0]))
-        return chatbot_do_reset(inc, inv, response, n);
-    else if (chatbot_is_save(inv[0]))
-        return chatbot_do_save(inc, inv, response, n);
-    else {
-        snprintf(response, n, "I don't understand \"%s\".", inv[0]);
-        return 0;
-    }
+
+		if (chatbot_is_swear(inc, inv, response, n))
+			return 0;
+		else if (chatbot_is_exit(inv[0]))
+			return chatbot_do_exit(inc, inv, response, n);
+		else if (chatbot_is_identity(inc, inv))
+			return chatbot_do_identity(inc, inv, response, n);
+		else if (chatbot_is_smalltalk(inv[0]))
+			return chatbot_do_smalltalk(inc, inv, response, n);
+		else if (chatbot_is_load(inv[0]))
+			return chatbot_do_load(inc, inv, response, n);
+		else if (chatbot_is_delete(inv[0]))
+			return chatbot_do_delete(inc, inv, response, n);
+		else if (chatbot_is_question(inv[0]))
+			return chatbot_do_question(inc, inv, response, n);
+		else if (chatbot_is_update(inv[0]))
+			return chatbot_do_update(inc, inv, response, n);
+		else if (chatbot_is_help(inv[0]))
+			return chatbot_do_help(inc, inv, response, n);
+		else if (chatbot_is_reset(inv[0]))
+			return chatbot_do_reset(inc, inv, response, n);
+		else if (chatbot_is_save(inv[0]))
+			return chatbot_do_save(inc, inv, response, n);
+		else {
+			snprintf(response, n, "I don't understand \"%s\".", inv[0]);
+			return 0;
+		}
+	
+	
 }
 
 /*
@@ -121,6 +131,35 @@ int chatbot_main(int inc, char * inv[], char * response, int n) {
  *  1, if the intent is "exit" or "quit"
  *  0, otherwise
  */
+
+int chatbot_is_swear(int inc, char* inv[], char* response, int n) {
+
+	int checkswear = 0;
+	char* swear[] = {"fuck","fucker","asshole","idiot","bastard","dumbass","hell","faggot","bitch"};
+	char* reply[] = { "Hey, you have quite a potty mouth." ,"Watch your language!","Hey, I may be a robot but I have feelings to!","Hey that hurts me inside!","Do you kiss your mother with that mouth?"};
+	//int replynum;
+
+	//replynum = rand() % 4;
+
+	for (int i = 0; i < sizeof(swear) / sizeof(swear[0]);i++) {
+		for (int j = 0; j < inc; j++) {
+
+			if (compare_token(inv[j], swear[i]) == 0) {
+				snprintf(response, n, "%s", reply[rand() % sizeof(reply) / sizeof(reply[0])]);
+				checkswear = 1;
+			}
+			
+		}
+	}
+	if (checkswear == 1) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+	
+}
+
 int chatbot_is_exit(const char * intent) {
     return compare_token(intent, "exit") == 0 || compare_token(intent, "quit") == 0;
 }
@@ -138,6 +177,8 @@ int chatbot_do_exit(int inc, char * inv[], char * response, int n) {
     snprintf(response, n, "Goodbye!");
     return 1;
 }
+
+
 
 /*
  * Determine whether an intent is FORGET.
@@ -401,7 +442,7 @@ int chatbot_do_load(int inc, char * inv[], char * response, int n) {
     }
     int num_of_lines = knowledge_read(f);
     fclose(f);
-    snprintf(response, n, "%d lines from\" %s\" loaded.", num_of_lines, inv[1]);
+    snprintf(response, n, "%d lines from \"%s\" loaded.", num_of_lines, inv[1]);
     return 0;
 
 }
@@ -522,6 +563,8 @@ int chatbot_is_save(const char * intent) {
  */
 int chatbot_do_save(int inc, char * inv[], char * response, int n) {
 
+	int num_of_rows;
+
     if (inc == 1) {
         snprintf(response, n, "File path not specified for SAVE");
     } else if (inc == 2) {
@@ -542,9 +585,9 @@ int chatbot_do_save(int inc, char * inv[], char * response, int n) {
                     perror("error");
                     return 0;
                 }
-                knowledge_write(f);
+				num_of_rows = knowledge_write(f);
                 fclose(f);
-                snprintf(response, n, "Saved to %s", inv[1]);
+                snprintf(response, n, "%d rows saved to %s",num_of_rows, inv[1]);
             }
         } else {
             fclose(f);
@@ -554,9 +597,9 @@ int chatbot_do_save(int inc, char * inv[], char * response, int n) {
                 perror("error");
                 return 0;
             }
-            knowledge_write(f);
+			num_of_rows = knowledge_write(f);
             fclose(f);
-            snprintf(response, n, "Saved to %s", inv[1]);
+			snprintf(response, n, "%d rows saved to %s", num_of_rows, inv[1]);
         }
         fclose(f);
     } else if (inc == 3 && compare_token(inv[1], "to") == 0) {
@@ -576,7 +619,7 @@ int chatbot_do_save(int inc, char * inv[], char * response, int n) {
                     snprintf(response, n, "Unable to write to %s", inv[2]);
                     return 0;
                 }
-                knowledge_write(f);
+				num_of_rows = knowledge_write(f);
                 fclose(f);
                 snprintf(response, n, "Saved to %s", inv[2]);
             }
@@ -586,9 +629,9 @@ int chatbot_do_save(int inc, char * inv[], char * response, int n) {
                 snprintf(response, n, "Unable to write to %s", inv[2]);
                 return 0;
             }
-            knowledge_write(f);
+            num_of_rows = knowledge_write(f);
             fclose(f);
-            snprintf(response, n, "Saved to %s", inv[2]);
+			snprintf(response, n, "%d rows saved to %s", num_of_rows, inv[1]);
         }
         fclose(f);
     }

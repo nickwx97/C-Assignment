@@ -42,6 +42,7 @@ int pest_check;/*EASTER EGG to check if user types same name with chatbot 3 time
 /* functions defined in chatbot.c */
 const char *chatbot_botname();
 const char *chatbot_username();
+int chatbot_is_swear(int inc, char* inv[], char* response, int n);
 int chatbot_main(int inc, char *inv[], char *response, int n);
 int chatbot_is_exit(const char *intent);
 int chatbot_do_exit(int inc, char *inv[], char *response, int n);
@@ -71,5 +72,5 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 int knowledge_put(const char *intent, const char *entity, const char *response);
 void knowledge_reset();
 int knowledge_read(FILE *f);
-void knowledge_write(FILE *f);
+int knowledge_write(FILE *f);
 #endif
