@@ -131,11 +131,10 @@ int chatbot_main(int inc, char * inv[], char * response, int n) {
 int chatbot_is_swear(int inc, char* inv[], char* response, int n) {
 
 	int checkswear = 0;
-	char* swear[] = {"fuck","fucker","asshole","idiot","bastard","dumbass","hell","faggot","bitch"};
-	char* reply[] = { "Hey, you have quite a potty mouth." ,"Watch your language!","Hey, I may be a robot but I have feelings to!","Hey that hurts me inside!","Do you kiss your mother with that mouth?"};
-	//int replynum;
-
-	//replynum = rand() % 4;
+	char* swear[] = { "fuck", "fucker", "asshole", "idiot", "bastard", "dumbass", "hell", "faggot", "bitch" };
+	char* reply[] = { "Hey, you have quite a potty mouth.", "Watch your language!",
+					  "Hey, I may be a robot but I have feelings too!", "Hey that hurts me inside!",
+					  "Do you kiss your mother with that mouth?" };
 
 	for (int i = 0; i < sizeof(swear) / sizeof(swear[0]);i++) {
 		for (int j = 0; j < inc; j++) {
@@ -208,8 +207,11 @@ int chatbot_do_delete(int inc, char * inv[], char * response, int n) {
     } else if (chatbot_is_question(inv[1])) {
         int len = 0;
         int num = 2;
-        if (is_quantifier(inv[2])) {
-            num = 3;
+        if (is_quantifier(inv[2]) && inc == 3) {
+            snprintf(response, n, "Ah-ha! You can't trick me into forgetting English words!");
+            return 0;
+        }else if (is_quantifier(inv[2])){
+        	num = 3;
         }
         for (int i = num; i < inc; ++i) {
             len += strlen(inv[i]);
@@ -275,10 +277,12 @@ int chatbot_do_update(int inc, char * inv[], char * response, int n) {
     } else if (chatbot_is_question(inv[1])) {
         int len = 0;
         int num = 2;
-        if (is_quantifier(inv[2])) {
-            num = 3;
-        }
-        for (int i = num; i < inc; ++i) {
+        if (is_quantifier(inv[2]) && inc == 3) {
+            snprintf(response, n, "What? I cannot update the definition of a word...");
+            return 0;
+        }else if (is_quantifier(inv[2])){
+        	num = 3;
+        }        for (int i = num; i < inc; ++i) {
             len += strlen(inv[i]);
         }
         char entity[len];
@@ -310,7 +314,18 @@ int chatbot_do_update(int inc, char * inv[], char * response, int n) {
                 }
             }
         } else if (ret == KB_NOTFOUND) {
-            snprintf(response, n, "Question does not exist.");
+        	printf("%s: I don't know the answer to that... Tell me?\n%s: ", chatbot_botname(), chatbot_username());
+            char input[MAX_INPUT];
+            fgets(input, MAX_INPUT, stdin);
+            if (strlen(input) == 1) {
+                snprintf(response, n, ":-(");
+            } else {
+                if (knowledge_put(inv[1], entity, input) == KB_OK) {
+                    snprintf(response, n, "Thanks! :-)");
+                }else{
+                	snprintf(response, n, "Something went wrong :-/");
+                }
+            }
         }
     }
     return 0;
