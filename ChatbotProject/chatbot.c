@@ -85,9 +85,7 @@ int chatbot_main(int inc, char * inv[], char * response, int n) {
         snprintf(response, n, " ");
         return 0;
 	}
-	/*else if (chatbot_is_swear(inc, inv, response, n)) {
-		return 0;
-	}*/
+
 
     /* look for an intent and invoke the corresponding do_* function */
 
@@ -122,13 +120,11 @@ int chatbot_main(int inc, char * inv[], char * response, int n) {
 }
 
 /*
- * Determine whether an intent is EXIT.
+ * Determine whether the user's response contains a swear word.
  *
- * Input:
- *  intent - the intent
  *
  * Returns:
- *  1, if the intent is "exit" or "quit"
+ *  1, if the response contains any swear word
  *  0, otherwise
  */
 
