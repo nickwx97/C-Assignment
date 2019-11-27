@@ -166,7 +166,7 @@ int chatbot_is_exit(const char * intent) {
  * function is used.
  *
  * Returns:
- *   0 (the chatbot always continues chatting after a question)
+ *   1 (the chatbot quits after this)
  */
 int chatbot_do_exit(int inc, char * inv[], char * response, int n) {
     snprintf(response, n, "Goodbye!");
