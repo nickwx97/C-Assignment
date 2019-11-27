@@ -35,9 +35,6 @@
 int compare_token(const char *token1, const char *token2);
 void prompt_user(char *buf, int n, const char *format, ...);
 char userName[MAX_USERNAME];/* to store the username typed in by the user*/
-int same_name_check;/* EASTER EGG to check if user inputs the same name as the chatbot*/
-int pest_check;/*EASTER EGG to check if user types same name with chatbot 3 times in a row*/
-
 
 /* functions defined in chatbot.c */
 void request_username();

@@ -50,22 +50,24 @@
 
 #include "chat1002.h"
 
-int swearcount;
+int swearcount = 0;
 /*
  * Get the name of the chatbot.
  *
  * Returns: the name of the chatbot as a null-terminated string
  */
 
-void request_username() {
+void request_username(char* response, int n) {
 	/* Request for a username */
+	int same_name_check = 0;/* EASTER EGG to check if user inputs the same name as the chatbot*/
+	int pest_check = 0;/*EASTER EGG to check if user types same name with chatbot 3 times in a row*/
 	printf("%s: Ey, who are you ah?\n", chatbot_botname());
 	do {
 		fgets(userName, MAX_USERNAME, stdin);
 		userName[strlen(userName) - 1] = '\0';
 	} while (strlen(userName) <= 1);
 
-	if (strcmp(chatbot_botname(), userName) == 0) {
+	if (compare_token(chatbot_botname(), userName) == 0) {
 		same_name_check = 1;
 	}
 
@@ -75,49 +77,38 @@ void request_username() {
 		fgets(userName, MAX_USERNAME, stdin);
 		userName[strlen(userName) - 1] = '\0';
 
-		if (strcmp(chatbot_botname(), userName) != 0) {
+		if (compare_token(chatbot_botname(), userName) != 0) {
 			same_name_check = 0;
-		}
-		else {
-			pest_check++;
-		}
-
-		if (pest_check == 2) {
 			break;
 		}
-	}
 
-	/*Calling user an irritating fool after purposely choosing the same name as the chatbot 3 times in a row*/
-	if (pest_check != 2) {
-		/* print a welcome message */
-		char* profname[] = {"Steven Wong","Frank Guan","Scott Jones"};
-		char* profresponse[] = {"Oh, you teach ICT1003 one right? That 'Fetch,Decode,Execute' guy? Heard you damn good sia. Haha, anyways, what's your question?\n",
-								"Oh, wow. Please give my creator an A+ for his 1002 please. He finds that you are the best SIT professor. May I know what you would like to ask me, sir?\n" ,
-								"Master Jones, Welcome sir. Nice to see you again. How may I help you today?\n"};
-		char* proftitle[] = {"Master","Lord","Emperor","Almighty"};
-		int profcheck = 0;
-
-		int arraysize = sizeof(profname) / sizeof(profname[0]);
-
-		/*Checks if the user is an ICT professor. If so, chatbot attempts to por for grades*/
-		for (int i = 0; i < arraysize;i++) {
-			if (compare_token(userName, profname[i]) == 0) {
-				strcpy(userName,proftitle[rand() % arraysize]);
-				strcat(userName, " ");
-				strcat(userName, profname[i]);
-				printf("%s",profresponse[i]);
-				profcheck = 1;
-			}
-		}
-	
-		if(profcheck != 1){
-			printf("%s: Hello %s, I'm %s. \nEnter help for list of commands.\n", chatbot_botname(), userName, chatbot_botname());
+		if (pest_check++ == 2) {
+			snprintf(response, n, "Wa you want try be funny is it, irritating fool. I call you Irritating Fool sua. What you wan ask me la?\n");
+			strcpy(userName, "Irritating Fool");
+			return;
 		}
 	}
-	else {
-		printf("%s: Wa you want try be funny is it, irritating fool. I call you Irritating Fool sua. What you wan ask me la?\n", chatbot_botname());
-		strcpy(userName, "Irritating Fool");
+
+
+	/* print a welcome message */
+	const char* profname[] = {"Steven Wong","Frank Guan","Scott Jones"};
+	const char* profresponse[] = {"Oh, you teach ICT1003 one right? That 'Fetch,Decode,Execute' guy? Heard you damn good sia. Haha, anyways, what's your question?\n",
+							"Oh, wow. Please give my creator an A+ for his 1002 please. He finds that you are the best SIT professor. May I know what you would like to ask me, sir?\n" ,
+							"Master Jones, Welcome sir. Nice to see you again. How may I help you today?\n"};
+	const char* proftitle[] = {"Master","Lord","Emperor","Almighty"};
+
+	int arraysize = sizeof(profname) / sizeof(char *);
+
+	/*Checks if the user is an ICT professor. If so, chatbot attempts to por for grades*/
+	for (int i = 0; i < arraysize;i++) {
+		if (compare_token(userName, profname[i]) == 0) {
+			const char* temp_title = proftitle[rand() % (arraysize + 1)];
+			snprintf(userName, strlen(userName) + strlen(temp_title) + 3, "%s %s", temp_title, profname[i]);
+			snprintf(response, n, profresponse[i]);
+			return;
+		}
 	}
+	snprintf(response, n, "Hello %s, I'm %s. \nEnter help for list of commands.\n", userName, chatbot_botname());
 }
 
 const char * chatbot_botname() {

@@ -16,6 +16,8 @@
 
 #include <string.h>
 
+#include <time.h>
+
 #include "chat1002.h"
 
 /* word delimiters */
@@ -28,6 +30,8 @@ int main(int argc, char * argv[]) {
 
     // reste chatbot on exit to free memory
     atexit(knowledge_reset);
+    //Seed random at start of program using time
+    srand(time(0));
 
     char input[MAX_INPUT]; /* buffer for holding the user input */
     int inc; /* the number of words in the user input */
@@ -37,12 +41,10 @@ int main(int argc, char * argv[]) {
     int done = 0; /* set to 1 to end the main loop */
 
     /* initialise the chatbot */
-    inv[0] = "reset";
-    inv[1] = NULL;
-    chatbot_do_reset(1, inv, output, MAX_RESPONSE);
+    knowledge_reset();
 
-	request_username();
-
+	request_username(output, MAX_RESPONSE);
+	printf("%s: %s\n", chatbot_botname(), output);
     /* main command loop */
     do {
 
