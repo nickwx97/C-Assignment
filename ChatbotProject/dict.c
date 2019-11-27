@@ -7,22 +7,22 @@
 
 typedef struct dictionary
 {
-	char *word;
-	char *meaning;
+	char word[MAX_WORD_LENGTH];
+	char meaning[MAX_MEANING_LENGTH];
 	struct dictionary * next;
 }
 
 dict;
 dict *dict_head = NULL;
 
-int dict_lookup(char *query, char *response, int n)
+int dict_lookup(char *query)
 {
 	dict *cursor = dict_head;
 	while (cursor != NULL)
 	{
 		if (compare_token(query, cursor->word) == 0)
 		{
-			snprintf(response, n, "The Oxford definition of %s is as below:\n%s", query, cursor->meaning);
+			printf("%s: The Oxford definition of %s is as below:\n\n%s\n\n", chatbot_botname(), query, cursor->meaning);
 			return KB_OK;
 		}
 
@@ -70,8 +70,10 @@ void dict_load()
 			return;
 		}
 
-		new->word = strdup(token);
-		new->meaning = strdup(strtok(NULL, "=="));
+		// new->word = strdup(token);
+		// new->meaning = strdup(strtok(NULL, "=="));
+		strcpy(new->word, token);
+		strcpy(new->meaning, strtok(NULL, "=="));
 		new->next = NULL;
 		if (dict_head == NULL)
 		{

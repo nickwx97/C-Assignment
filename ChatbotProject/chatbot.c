@@ -273,8 +273,10 @@ int chatbot_do_meaning(int inc, char *inv[], char *response, int n)
 		check = 1;
 	}
 
-	if (dict_lookup(inv[1 + check], response, n) == KB_NOTFOUND)
+	if (dict_lookup(inv[1 + check]) == KB_OK)
 	{
+		snprintf(response, n, "What's your next question?");
+	} else {
 		snprintf(response, n, "Sorry, I do not know the definition of %s", inv[1 + check]);
 	}
 
@@ -799,7 +801,6 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n)
 	}
 	else if (inc == 2)
 	{
-		printf("%s\n", inv[1]);
 		FILE *f = fopen(inv[1], "r");
 		if (f != NULL)
 		{

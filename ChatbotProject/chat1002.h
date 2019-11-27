@@ -77,6 +77,6 @@ int knowledge_is_empty();
 
 /* functions defined in dict.c*/
 void dict_free();
-int dict_lookup(char* query, char* response, int n);
+int dict_lookup(char* query);
 void dict_load();
 #endif
