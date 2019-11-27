@@ -204,6 +204,15 @@ int knowledge_put(const char * intent,
  * Returns: the number of entity/response pairs successful read from the file
  */
 int knowledge_read(FILE * f) {
+	if (NULL != f) {
+	    fseek (f, 0, SEEK_END);
+	    int size = ftell(f);
+	    rewind(f);
+	    if (0 == size) {
+	        return 0;
+	    }
+	}
+
     int num_of_lines = 0;
     knowledge_reset();
     header * cursor = k_arr;
@@ -291,6 +300,21 @@ void knowledge_reset() {
     }
 }
 
+int knowledge_is_empty(){
+	if(k_arr == NULL){
+		return 1;
+	}else{
+		header * cursor = k_arr;
+		while(cursor != NULL){
+			if(cursor->content != NULL){
+				return 0;
+			}
+			cursor = cursor->next;
+		}
+		return 1;
+	}
+}
+
 /*
  * Write the knowledge base to a file.
  *
@@ -303,7 +327,6 @@ int knowledge_write(FILE * f) {
     row * row_cursor = NULL;
 
     while (cursor != NULL) {
-		
         fwrite("[", 1, 1, f);
         fwrite(cursor -> intent, strlen(cursor -> intent), 1, f);
         fwrite("]\n", 2, 1, f);
@@ -322,5 +345,5 @@ int knowledge_write(FILE * f) {
             fwrite("\n", 1, 1, f);
         cursor = cursor -> next;
     }
-	return num_of_rows;
+	return num_of_rows == 0 ? -1: num_of_rows;
 }

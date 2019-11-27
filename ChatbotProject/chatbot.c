@@ -61,8 +61,8 @@ void request_username(char* response, int n) {
 	/* Request for a username */
 	int same_name_check = 0;/* EASTER EGG to check if user inputs the same name as the chatbot*/
 	int pest_check = 0;/*EASTER EGG to check if user types same name with chatbot 3 times in a row*/
-	printf("%s: Ey, who are you ah?\n", chatbot_botname());
 	do {
+		printf("%s: Ey, who are you ah?\n:", chatbot_botname());
 		fgets(userName, MAX_USERNAME, stdin);
 		userName[strlen(userName) - 1] = '\0';
 	} while (strlen(userName) <= 1);
@@ -633,6 +633,11 @@ int chatbot_is_save(const char * intent) {
  */
 int chatbot_do_save(int inc, char * inv[], char * response, int n) {
 
+	if(knowledge_is_empty()){
+		snprintf(response, n, "No knowledge to write!");
+		return 0;
+	}
+
 	int num_of_rows;
 
     if (inc == 1) {
@@ -657,7 +662,7 @@ int chatbot_do_save(int inc, char * inv[], char * response, int n) {
                 }
 				num_of_rows = knowledge_write(f);
                 fclose(f);
-                snprintf(response, n, "%d rows saved to %s",num_of_rows, inv[1]);
+            	snprintf(response, n, "%d rows saved to %s",num_of_rows, inv[1]);
             }
         } else {
             fclose(f);
