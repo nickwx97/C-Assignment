@@ -191,35 +191,25 @@ int chatbot_main(int inc, char* inv[], char* response, int n) {
  */
 
 int chatbot_is_swear(int inc, char* inv[], char* response, int n) {
-
-	int checkswear = 0;
 	
-	char* swear[] = { "fuck", "fucker", "asshole", "idiot", "bastard", "dumbass", "hell", "faggot", "bitch" };
-	char* reply[] = { "Hey, you have quite a potty mouth.", "Watch your language!",
+	const char* swear[] = { "fuck", "fucker", "asshole", "idiot", "bastard", "dumbass", "hell", "faggot", "bitch" };
+	const char* reply[] = { "Hey, you have quite a potty mouth.", "Watch your language!",
 					  "Hey, I may be a robot but I have feelings too!", "Hey that hurts me inside!",
 					  "Do you kiss your mother with that mouth?" };
 
-	int arraysize = sizeof(reply) / sizeof(reply[0]);
+	int arraysize = sizeof(reply) / sizeof(char *);
 
-	for (int i = 0; i < sizeof(swear) / sizeof(swear[0]);i++) {
-		for (int j = 0; j < inc; j++) {
+	for (int j = 0; j < inc; j++) {
+		for (int i = 0; i < sizeof(swear) / sizeof(char *); i++) {
 			if (compare_token(inv[j], swear[i]) == 0) {
-				snprintf(response, n, "%s", reply[rand() % arraysize]);
-				checkswear = 1;
+				snprintf(response, n, "%s", reply[rand() % arraysize+1]);
+				swearcount++;
+				return 1;
 			}
 			
 		}
 	}
-
-
-	if (checkswear == 1) {
-		swearcount++;
-		return 1;
-	}
-	else {
-		return 0;
-	}
-
+	return 0;
 }
 
 int chatbot_is_exit(const char * intent) {
