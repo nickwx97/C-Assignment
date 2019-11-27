@@ -102,7 +102,7 @@ void request_username(char* response, int n) {
 	/*Checks if the user is an ICT professor. If so, chatbot attempts to por for grades*/
 	for (int i = 0; i < arraysize;i++) {
 		if (compare_token(userName, profname[i]) == 0) {
-			const char* temp_title = proftitle[rand() % (arraysize + 1)];
+			const char* temp_title = proftitle[rand() % arraysize];
 			snprintf(userName, strlen(userName) + strlen(temp_title) + 3, "%s %s", temp_title, profname[i]);
 			snprintf(response, n, profresponse[i]);
 			return;
@@ -202,7 +202,7 @@ int chatbot_is_swear(int inc, char* inv[], char* response, int n) {
 	for (int j = 0; j < inc; j++) {
 		for (int i = 0; i < sizeof(swear) / sizeof(char *); i++) {
 			if (compare_token(inv[j], swear[i]) == 0) {
-				snprintf(response, n, "%s", reply[rand() % arraysize+1]);
+				snprintf(response, n, "%s", reply[rand() % arraysize]);
 				swearcount++;
 				return 1;
 			}
@@ -227,7 +227,7 @@ int chatbot_is_exit(const char * intent) {
  */
 int chatbot_do_exit(int inc, char * inv[], char * response, int n) {
 	char* greetings[] = {"Farewell!","Hope to talk you soon!","I will miss you!","Goodbye!"};
-	int arraysize = sizeof(greetings) / sizeof(greetings[0]);
+	int arraysize = sizeof(greetings) / sizeof(char *);
     snprintf(response, n, greetings[rand() % arraysize]);
     return 1;
 }
