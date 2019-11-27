@@ -1,140 +1,135 @@
 /*
- * ICT1002 (C Language) Group Project, AY19 Trimester 1.
+ *ICT1002 (C Language) Group Project, AY19 Trimester 1.
  *
- * This file implements the main loop, including dividing input into words.
+ *This file implements the main loop, including dividing input into words.
  *
- * You should not need to modify this file. You may invoke its functions if you like, however.
+ *You should not need to modify this file. You may invoke its functions if you like, however.
  */
-
 #include <ctype.h>
-
 #include <stdarg.h>
-
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
-
 #include <time.h>
-
 #include "chat1002.h"
 
-/* word delimiters */
-const char * delimiters = " ?\t\n";
+/*word delimiters */
+const char *delimiters = " ?\t\n";
 
 /*
- * Main loop.
+ *Main loop.
  */
-int main(int argc, char * argv[]) {
+int main(int argc, char *argv[])
+{
+	// reste chatbot on exit to free memory
+	atexit(knowledge_reset);
+	atexit(dict_free);
+	dict_load();
+	//Seed random at start of program using time
+	srand(time(0));
 
-    // reste chatbot on exit to free memory
-    atexit(knowledge_reset);
-    //Seed random at start of program using time
-    srand(time(0));
+	char input[MAX_INPUT]; /*buffer for holding the user input */
+	int inc; /*the number of words in the user input */
+	char *inv[MAX_INPUT]; /*pointers to the beginning of each word of input */
+	char output[MAX_RESPONSE]; /*the chatbot's output */
+	int len; /*length of a word */
+	int done = 0; /*set to 1 to end the main loop */
 
-    char input[MAX_INPUT]; /* buffer for holding the user input */
-    int inc; /* the number of words in the user input */
-    char * inv[MAX_INPUT]; /* pointers to the beginning of each word of input */
-    char output[MAX_RESPONSE]; /* the chatbot's output */
-    int len; /* length of a word */
-    int done = 0; /* set to 1 to end the main loop */
-
-    /* initialise the chatbot */
-    knowledge_reset();
+	/*initialise the chatbot */
+	knowledge_reset();
 
 	request_username(output, MAX_RESPONSE);
 	printf("%s: %s\n", chatbot_botname(), output);
-    /* main command loop */
-    do {
+	/*main command loop */
+	do {
+		do {
+			/*read the line */
+			printf("%s: ", chatbot_username());
+			fgets(input, MAX_INPUT, stdin);
 
-        do {
-            /* read the line */
-            printf("%s: ", chatbot_username());
-            fgets(input, MAX_INPUT, stdin);
+			/*split it into words */
+			inc = 0;
+			inv[inc] = strtok(input, delimiters);
+			while (inv[inc] != NULL)
+			{
+				/*remove trailing punctuation */
+				len = strlen(inv[inc]);
+				while (len > 0 && ispunct(inv[inc][len - 1]))
+				{
+					inv[inc][len - 1] = '\0';
+					len--;
+				}
 
-            /* split it into words */
-            inc = 0;
-            inv[inc] = strtok(input, delimiters);
-            while (inv[inc] != NULL) {
+				/*go to the next word */
+				inc++;
+				inv[inc] = strtok(NULL, delimiters);
+			}
+		} while (inc < 1);
 
-                /* remove trailing punctuation */
-                len = strlen(inv[inc]);
-                while (len > 0 && ispunct(inv[inc][len - 1])) {
-                    inv[inc][len - 1] = '\0';
-                    len--;
-                }
+		/*invoke the chatbot */
+		done = chatbot_main(inc, inv, output, MAX_RESPONSE);
+		printf("%s: %s\n", chatbot_botname(), output);
+		strcpy(output, "");
 
-                /* go to the next word */
-                inc++;
-                inv[inc] = strtok(NULL, delimiters);
-            }
-        } while (inc < 1);
+	} while (!done);
 
-        /* invoke the chatbot */
-        done = chatbot_main(inc, inv, output, MAX_RESPONSE);
-        printf("%s: %s\n", chatbot_botname(), output);
-        strcpy(output, "");
-
-    } while (!done);
-
-    return 0;
+	return 0;
 }
 
 /*
- * Utility function for comparing string case-insensitively.
+ *Utility function for comparing string case-insensitively.
  *
- * Input:
- *   token1 - the first token
- *   token2 - the second token
+ *Input:
+ *  token1 - the first token
+ *  token2 - the second token
  *
- * Returns:
- *   as strcmp()
+ *Returns:
+ *  as strcmp()
  */
-int compare_token(const char * token1,
-    const char * token2) {
+int compare_token(const char *token1, const char *token2)
+{
+	int i = 0;
+	while (token1[i] != '\0' && token2[i] != '\0')
+	{
+		if (toupper(token1[i]) < toupper(token2[i]))
+			return -1;
+		else if (toupper(token1[i]) > toupper(token2[i]))
+			return 1;
+		i++;
+	}
 
-    int i = 0;
-    while (token1[i] != '\0' && token2[i] != '\0') {
-        if (toupper(token1[i]) < toupper(token2[i]))
-            return -1;
-        else if (toupper(token1[i]) > toupper(token2[i]))
-            return 1;
-        i++;
-    }
-    if (token1[i] == '\0' && token2[i] == '\0')
-        return 0;
-    else if (token1[i] == '\0')
-        return -1;
-    else
-        return 1;
+	if (token1[i] == '\0' && token2[i] == '\0')
+		return 0;
+	else if (token1[i] == '\0')
+		return -1;
+	else
+		return 1;
 }
 
 /*
- * Prompt the user.
+ *Prompt the user.
  *
- * Input:
- *   buf    - a buffer into which to store the answer
- *   n      - the maximum number of characters to write to the buffer
- *   format - format string, as printf
- *   ...    - as printf
+ *Input:
+ *  buf    - a buffer into which to store the answer
+ *  n      - the maximum number of characters to write to the buffer
+ *  format - format string, as printf
+ *  ...    - as printf
  */
-void prompt_user(char * buf, int n,
-    const char * format, ...) {
+void prompt_user(char *buf, int n, const char *format, ...)
+{
+	/*print the prompt */
+	va_list args;
+	va_start(args, format);
+	printf("%s: ", chatbot_botname());
+	vprintf(format, args);
+	printf(" ");
+	va_end(args);
+	printf("\n%s: ", chatbot_username());
 
-    /* print the prompt */
-    va_list args;
-    va_start(args, format);
-    printf("%s: ", chatbot_botname());
-    vprintf(format, args);
-    printf(" ");
-    va_end(args);
-    printf("\n%s: ", chatbot_username());
-
-    /* get the response from the user */
-    fgets(buf, n, stdin);
-    char * nl = strchr(buf, '\n');
-    if (nl != NULL)
-        *
-        nl = '\0';
+	/*get the response from the user */
+	fgets(buf, n, stdin);
+	char *nl = strchr(buf, '\n');
+	if (nl != NULL)
+		*
+		nl = '\0';
 }

@@ -63,6 +63,8 @@ int chatbot_is_identity(int inc, char* inv[]);
 int chatbot_is_update(const char* intent);
 int is_quantifier(const char* intent);
 int chatbot_do_update(int inc, char* inv[], char* response, int n);
+int chatbot_is_meaning(const char* intent);
+int chatbot_do_meaning(int inc, char* inv[], char* response, int n);
 
 /* functions defined in knowledge.c */
 int knowledge_delete(const char *intent, const char *entity);
@@ -72,4 +74,9 @@ void knowledge_reset();
 int knowledge_read(FILE *f);
 int knowledge_write(FILE *f);
 int knowledge_is_empty();
+
+/* functions defined in dict.c*/
+void dict_free();
+int dict_lookup(char* query, char* response, int n);
+void dict_load();
 #endif
