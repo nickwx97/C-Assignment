@@ -55,6 +55,70 @@
  *
  * Returns: the name of the chatbot as a null-terminated string
  */
+
+void request_username() {
+	/* Request for a username */
+	printf("%s: Ey, who are you ah?\n", chatbot_botname());
+	do {
+		fgets(userName, MAX_USERNAME, stdin);
+		userName[strlen(userName) - 1] = '\0';
+	} while (strlen(userName) <= 1);
+
+	if (strcmp(chatbot_botname(), userName) == 0) {
+		same_name_check = 1;
+	}
+
+	/*Loops to make sure the user chooses a different name as the chatbot*/
+	while (same_name_check == 1) {
+		printf("%s: Wa eh dun same name as me leh? Choose something else la.\n", chatbot_botname());
+		fgets(userName, MAX_USERNAME, stdin);
+		userName[strlen(userName) - 1] = '\0';
+
+		if (strcmp(chatbot_botname(), userName) != 0) {
+			same_name_check = 0;
+		}
+		else {
+			pest_check++;
+		}
+
+		if (pest_check == 2) {
+			break;
+		}
+	}
+
+	/*Calling user an irritating fool after purposely choosing the same name as the chatbot 3 times in a row*/
+	if (pest_check != 2) {
+		/* print a welcome message */
+		char* profname[] = {"Steven Wong","Frank Guan","Scott Jones"};
+		char* profresponse[] = {"Oh, you teach ICT1003 one right? That 'Fetch,Decode,Execute' guy? Heard you damn good sia. Haha, anyways, what's your question?\n",
+								"Oh, wow. Please give my creator an A+ for his 1002 please. He finds that you are the best SIT professor. May I know what you would like to ask me, sir?\n" ,
+								"Master Jones, Welcome sir. Nice to see you again. How may I help you today?\n"};
+		char* proftitle[] = {"Master","Lord","Emperor","Almighty"};
+		int profcheck = 0;
+
+		int arraysize = sizeof(profname) / sizeof(profname[0]);
+
+		/*Checks if the user is an ICT professor. If so, chatbot attempts to por for grades*/
+		for (int i = 0; i < arraysize;i++) {
+			if (compare_token(userName, profname[i]) == 0) {
+				strcpy(userName,proftitle[rand() % arraysize]);
+				strcat(userName, " ");
+				strcat(userName, profname[i]);
+				printf("%s",profresponse[i]);
+				profcheck = 1;
+			}
+		}
+	
+		if(profcheck != 1){
+			printf("%s: Hello %s, I'm %s. \nEnter help for list of commands.\n", chatbot_botname(), userName, chatbot_botname());
+		}
+	}
+	else {
+		printf("%s: Wa you want try be funny is it, irritating fool. I call you Irritating Fool sua. What you wan ask me la?\n", chatbot_botname());
+		strcpy(userName, "Irritating Fool");
+	}
+}
+
 const char * chatbot_botname() {
     return "Miss Magnolia";
 }
@@ -135,12 +199,13 @@ int chatbot_is_swear(int inc, char* inv[], char* response, int n) {
 	char* reply[] = { "Hey, you have quite a potty mouth.", "Watch your language!",
 					  "Hey, I may be a robot but I have feelings too!", "Hey that hurts me inside!",
 					  "Do you kiss your mother with that mouth?" };
+	int arraysize = sizeof(reply) / sizeof(reply[0]);
 
 	for (int i = 0; i < sizeof(swear) / sizeof(swear[0]);i++) {
 		for (int j = 0; j < inc; j++) {
 
 			if (compare_token(inv[j], swear[i]) == 0) {
-				snprintf(response, n, "%s", reply[rand() % sizeof(reply) / sizeof(reply[0])]);
+				snprintf(response, n, "%s", reply[rand() % arraysize]);
 				checkswear = 1;
 			}
 			
@@ -169,7 +234,9 @@ int chatbot_is_exit(const char * intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_exit(int inc, char * inv[], char * response, int n) {
-    snprintf(response, n, "Goodbye!");
+	char* greetings[] = {"Farewell!","Hope to talk you soon!","I will miss you!","Goodbye!"};
+	int arraysize = sizeof(greetings) / sizeof(greetings[0]);
+    snprintf(response, n, greetings[rand() % arraysize]);
     return 1;
 }
 
@@ -662,7 +729,7 @@ int chatbot_do_save(int inc, char * inv[], char * response, int n) {
  */
 int chatbot_is_smalltalk(const char * intent) {
     if (compare_token(intent, "good") == 0 || compare_token(intent, "hello") == 0 || compare_token(intent, "goodbye") == 0 || compare_token(intent, "it's") == 0 ||
-        compare_token(intent, "today") == 0 || compare_token(intent, "i") == 0) {
+        compare_token(intent, "today") == 0 || compare_token(intent, "i") == 0 || compare_token(intent, "it") == 0) {
         return 1;
     } else {
         return 0;
@@ -693,7 +760,7 @@ int chatbot_do_smalltalk(int inc, char * inv[], char * response, int n) {
             return 1;
         } else if (compare_token(inv[i], "hello") == 0) {
             snprintf(response, n, "%s", "Hello.");
-        } else if (compare_token(inv[i], "it's") == 0) {
+        } else if (compare_token(inv[i], "it's") == 0 ||(compare_token(inv[0], "it") == 0 && compare_token(inv[1], "is") == 0)) {
             snprintf(response, n, "%s", "Indeed it is.");
         } else if (compare_token(inv[i], "today") == 0) {
             snprintf(response, n, "%s", "That's good to know.");

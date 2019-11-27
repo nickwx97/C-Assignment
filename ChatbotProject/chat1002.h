@@ -40,6 +40,7 @@ int pest_check;/*EASTER EGG to check if user types same name with chatbot 3 time
 
 
 /* functions defined in chatbot.c */
+void request_username();
 const char *chatbot_botname();
 const char *chatbot_username();
 int chatbot_is_swear(int inc, char* inv[], char* response, int n);
