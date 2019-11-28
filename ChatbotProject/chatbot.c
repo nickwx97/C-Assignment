@@ -530,7 +530,22 @@ int chatbot_is_help(const char *intent)
  */
 int chatbot_do_help(int inc, char *inv[], char *response, int n)
 {
-	snprintf(response, n, "\n < ------List of commands:------> \nload 'sample.ini' - load the knowledge base\nsave - save knowledge base\nreset - reset knowledge base.\nquit/exit - exit the chatbot.\n");
+	char* helptext[] = { "load 'sample.ini' - load the knowledge base",
+						 "save - save knowledge base",
+						 "reset - reset knowledge base.",
+						 "meaning of (word) - searches Oxford dictionary for meaning of the word.", 
+						 "update - update the knowledge base on the answer of a particular section",
+						 "delete - delete from the knowledge base a particular answer of a question",
+						 "quit/exit - exit the chatbot"};
+
+	int arraylength = sizeof(helptext) / sizeof(helptext)[0];
+
+	printf("\n<-------- Below are a list of explanations on the different functions. --------->\n");
+
+	for (int i = 0; i < arraylength;i++) {
+		printf("%s\n",helptext[i]);
+	}
+	snprintf(response, n, "Hope these clarifies...\n");
 	return 0;
 }
 
