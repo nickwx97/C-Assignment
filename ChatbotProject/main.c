@@ -21,10 +21,13 @@ const char *delimiters = " ?\t\n";
  */
 int main(int argc, char *argv[])
 {
-	// reste chatbot on exit to free memory
+	// reset chatbot on exit to free memory
 	atexit(knowledge_reset);
 	atexit(dict_free);
+
+	//Load dictionary from file to memory
 	dict_load();
+
 	//Seed random at start of program using time
 	srand(time(0));
 
@@ -35,10 +38,10 @@ int main(int argc, char *argv[])
 	int len; /*length of a word */
 	int done = 0; /*set to 1 to end the main loop */
 
-	/*initialise the chatbot */
+	/* initialise the chatbot */
 	knowledge_reset();
 
-	request_username(output, MAX_RESPONSE);
+	request_username(output, MAX_RESPONSE); //request user input for own name
 	printf("%s: %s\n", chatbot_botname(), output);
 	/*main command loop */
 	do {
