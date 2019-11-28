@@ -274,7 +274,7 @@ int knowledge_read(FILE *f)
 			continue; //Skip line if blank
 		}
 
-		if (strchr(temp, '[') != NULL && strchr(temp, ']') != NULL) // If read in header
+		if (strchr(temp, '[') != NULL && strchr(temp, ']') != NULL && strchr(temp, '=') == NULL) // If read in header
 		{
 			int len = strlen(temp);
 			// Strip square brackets from header
