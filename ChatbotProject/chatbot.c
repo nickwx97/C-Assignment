@@ -290,7 +290,7 @@ int chatbot_do_meaning(int inc, char *inv[], char *response, int n)
 	}
 	else if (inc == 3 && compare_token(inv[1], "of") == 0) // If input is "Meaning of <word>"
 	{
-		check = 1; // Flag to skip second intent of not
+		check = 1; // Flag to skip second intent or not
 	}
 
 	if (dict_lookup(inv[1 + check]) == KB_OK) // Call function to check for meaning
@@ -649,6 +649,11 @@ int chatbot_is_load(const char *intent)
  */
 int chatbot_do_load(int inc, char *inv[], char *response, int n)
 {
+	if (inc == 1){ // Input: load
+		snprintf(response, n, "No file specified");
+		return 0;
+	}
+
 	int len = 0;
 	FILE * f;
 	if (inc > 2) //Input: load <Filename with spaces>
