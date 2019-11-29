@@ -59,7 +59,11 @@ void dict_free()
 void dict_load()
 {
 	FILE *f = fopen("Oxford English Dictionary.txt", "r"); // Open file for reading
-	if (f == NULL) return; // If unable to open file, resume program flow
+	if (f == NULL){ // If unable to open file, resume program flow
+		printf("Unable to read Oxford English Dictionary.txt, meaning function diabled.\n");
+		return; 
+	}
+
 
 	while (!feof(f)) // Read entire file
 	{
@@ -76,7 +80,7 @@ void dict_load()
 		if (new == NULL) // If unable to allocate memory
 		{
 			//Print error and free dictionary, then resume program flow
-			perror("Dictionary allocation failure");
+			perror("Dictionary allocation failure, meaning function disabled. Reason");
 			fclose(f);
 			dict_free();
 			return;
