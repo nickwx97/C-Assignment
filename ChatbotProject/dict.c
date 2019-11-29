@@ -52,8 +52,6 @@ void dict_free()
 		cursor = dict_head;
 		dict_head = dict_head->next;
 		//Free memory used by Dict
-		free(cursor->word);
-		free(cursor->meaning);
 		free(cursor);
 	}
 }
@@ -85,8 +83,8 @@ void dict_load()
 		}
 
 		// Copies word and meaning to dict node
-		strcpy(new->word, token);
-		strcpy(new->meaning, strtok(NULL, "=="));
+		strncpy(new->word, token, MAX_WORD_LENGTH);
+		strncpy(new->meaning, strtok(NULL, "=="), MAX_MEANING_LENGTH);
 		new->next = NULL;
 		if (dict_head == NULL)
 		{
